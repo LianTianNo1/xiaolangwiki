@@ -1,17 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/xiaolangwiki/2024/10/23/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+    <title>husky的原理是什么</title>
+    <url>/xiaolangwiki/2022/01/09/hello-world/</url>
+    <content><![CDATA[<p>一个简化的代码示例,展示 husky 的基本实现原理。这个例子会展示 husky 如何拦截 Git hooks 并执行自定义脚本。请注意,这只是一个概念性的示例,真实的 husky 实现要复杂得多。</p>
+<p>以下是一个简化的 JavaScript 代码示例,展示了 husky 的核心原理:</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&quot;path&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> &#123; execSync &#125; = <span class="built_in">require</span>(<span class="string">&quot;child_process&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SimpleHusky</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">hooksDir</span> = path.<span class="title function_">join</span>(<span class="string">&quot;.git&quot;</span>, <span class="string">&quot;hooks&quot;</span>);</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">config</span> = <span class="variable language_">this</span>.<span class="title function_">loadConfig</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 加载husky配置</span></span><br><span class="line">  <span class="title function_">loadConfig</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> packageJson = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(fs.<span class="title function_">readFileSync</span>(<span class="string">&quot;package.json&quot;</span>, <span class="string">&quot;utf8&quot;</span>));</span><br><span class="line">    <span class="keyword">return</span> packageJson.<span class="property">husky</span> || &#123;&#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 安装Git hooks</span></span><br><span class="line">  <span class="title function_">install</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!fs.<span class="title function_">existsSync</span>(<span class="variable language_">this</span>.<span class="property">hooksDir</span>)) &#123;</span><br><span class="line">      fs.<span class="title function_">mkdirSync</span>(<span class="variable language_">this</span>.<span class="property">hooksDir</span>, &#123; <span class="attr">recursive</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title class_">Object</span>.<span class="title function_">keys</span>(<span class="variable language_">this</span>.<span class="property">config</span>.<span class="property">hooks</span>).<span class="title function_">forEach</span>(<span class="function">(<span class="params">hookName</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> hookPath = path.<span class="title function_">join</span>(<span class="variable language_">this</span>.<span class="property">hooksDir</span>, hookName);</span><br><span class="line">      <span class="keyword">const</span> hookContent = <span class="variable language_">this</span>.<span class="title function_">generateHookScript</span>(hookName);</span><br><span class="line">      fs.<span class="title function_">writeFileSync</span>(hookPath, hookContent, &#123; <span class="attr">mode</span>: <span class="number">0o755</span> &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Husky hooks installed successfully!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 生成hook脚本</span></span><br><span class="line">  <span class="title function_">generateHookScript</span>(<span class="params">hookName</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`#!/bin/sh</span></span><br><span class="line"><span class="string"># Husky</span></span><br><span class="line"><span class="string"># 运行配置的脚本</span></span><br><span class="line"><span class="string"><span class="subst">$&#123;<span class="variable language_">this</span>.config.hooks[hookName]&#125;</span></span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 运行hook</span></span><br><span class="line">  <span class="title function_">runHook</span>(<span class="params">hookName</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> script = <span class="variable language_">this</span>.<span class="property">config</span>.<span class="property">hooks</span>[hookName];</span><br><span class="line">    <span class="keyword">if</span> (script) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Running <span class="subst">$&#123;hookName&#125;</span> hook...`</span>);</span><br><span class="line">        <span class="title function_">execSync</span>(script, &#123; <span class="attr">stdio</span>: <span class="string">&quot;inherit&quot;</span> &#125;);</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;hookName&#125;</span> hook completed successfully.`</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">`<span class="subst">$&#123;hookName&#125;</span> hook failed. Git operation aborted.`</span>);</span><br><span class="line">        process.<span class="title function_">exit</span>(<span class="number">1</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用示例</span></span><br><span class="line"><span class="keyword">const</span> husky = <span class="keyword">new</span> <span class="title class_">SimpleHusky</span>();</span><br><span class="line">husky.<span class="title function_">install</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模拟触发pre-commit hook</span></span><br><span class="line">husky.<span class="title function_">runHook</span>(<span class="string">&quot;pre-commit&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>这个简化的实现展示了 husky 的几个核心概念:</p>
+<ol>
+<li>配置加载: 从 package.json 文件中读取 husky 配置。</li>
+<li>Hook 安装: 在.git/hooks 目录中创建对应的 hook 脚本文件。</li>
+<li>Hook 脚本生成: 生成可执行的 shell 脚本,其中包含用户配置的命令。</li>
+<li>Hook 执行: 当 Git 操作触发 hook 时,执行相应的脚本。</li>
+<li>错误处理: 如果脚本执行失败,则阻止 Git 操作继续进行。</li>
+</ol>
+<p>使用这个简化版的 husky,你可以在 package.json 中添加类似这样的配置:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;husky&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;hooks&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;pre-commit&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npm run lint &amp;&amp; npm test&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;pre-push&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npm run build&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>然后,当你尝试提交代码时,它会先运行 lint 和测试,只有在这些检查都通过后,提交才会成功。</p>
+<p>请注意,实际的 husky 实现要复杂得多,包括更多的错误处理、跨平台兼容性、与不同版本的 Git 的兼容性等。这个示例仅用于说明基本原理。如果您需要在实际项目中使用,我强烈建议使用官方的 husky 包,因为它经过了充分的测试和优化。</p>
 ]]></content>
+      <categories>
+        <category>工具</category>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>husky</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>React 无缝滚动跑马灯组件</title>
+    <url>/xiaolangwiki/2022/02/16/banner/</url>
+    <content><![CDATA[<h2 id="React-无缝滚动跑马灯组件"><a href="#React-无缝滚动跑马灯组件" class="headerlink" title="React 无缝滚动跑马灯组件"></a>React 无缝滚动跑马灯组件</h2><p>最近在做一个电商平台的项目，其中一个需求是在首页顶部展示一些重要的通知公告，比如物流赔付信息、促销活动预告等。为了吸引用户的注意力，UI决定采用跑马灯的形式来展示这些信息，并且要实现无缝滚动，避免出现停顿或跳跃的视觉效果。</p>
+<p>由于公司老项目限制，我们没有采用现成的轮播图组件，于是决定自己动手开发一个 React 无缝滚动跑马灯组件。</p>
+<h3 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h3><p>我们的跑马灯组件需要满足以下几个需求：</p>
+<ol>
+<li><strong>无缝滚动</strong>: 文案滚动流畅，首尾衔接自然，没有明显的停顿或跳跃。</li>
+<li><strong>可配置</strong>: 可以自定义滚动速度、文案内容、字体颜色等样式。</li>
+<li><strong>易用</strong>: 使用简单，只需要传入文案数组即可。</li>
+</ol>
+<h3 id="组件设计与实现"><a href="#组件设计与实现" class="headerlink" title="组件设计与实现"></a>组件设计与实现</h3><h4 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h4><p>实现无缝滚动的关键在于复制第一条文案到最后一条，形成一个循环。当滚动到最后一条文案时，瞬间回到第一条文案，由于视觉上第一条文案已经在最后一条文案后面，所以看起来像是继续滚动，从而达到无缝衔接的效果。</p>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><p>首先，我们定义了组件的 Props 和 State：</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">SeamlessMarqueeProps</span> &#123;</span><br><span class="line">    <span class="attr">texts</span>: <span class="built_in">string</span>[]; <span class="comment">// 轮播文案</span></span><br><span class="line">    interval?: <span class="built_in">number</span>; <span class="comment">// 轮播间隔，单位毫秒，默认1000毫秒（每秒滚动一组文案）</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">SeamlessMarqueeState</span> &#123;</span><br><span class="line">    <span class="attr">translateY</span>: <span class="built_in">number</span>; <span class="comment">// 滚动距离</span></span><br><span class="line">    <span class="attr">currentTextIndex</span>: <span class="built_in">number</span>; <span class="comment">// 当前显示的文案索引</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后，在组件的 <code>componentDidMount</code> 生命周期方法中启动定时器，开始滚动：</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">componentDidMount</span> () &#123;</span><br><span class="line">    <span class="comment">// 开始滚动</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">startMarquee</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>startMarquee</code> 方法中，我们使用 <code>setInterval</code> 定时调用 <code>rollAnimation</code> 方法，实现滚动动画：</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line">rollAnimation = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ... 动画逻辑</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">startMarquee = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; interval = <span class="number">1000</span> &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">marqueeInterval</span> = <span class="variable language_">window</span>.<span class="built_in">setInterval</span>(<span class="variable language_">this</span>.<span class="property">rollAnimation</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>), interval);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>rollAnimation</code> 方法中，我们首先复制第一条文案到最后一条，然后计算下一个文案索引和滚动距离，最后更新组件的 State，触发重新渲染：</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line">rollAnimation = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ... 复制文案、计算索引和滚动距离</span></span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">        <span class="attr">translateY</span>: nextTranslateY,</span><br><span class="line">        <span class="attr">currentTextIndex</span>: nextTextIndex,</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后，在 <code>render</code> 方法中，我们使用 <code>ul</code> 元素来包裹文案列表，并通过 <code>transform: translateY</code> 来实现滚动效果：</p>
+<figure class="highlight tsx"><table><tr><td class="code"><pre><span class="line">&lt;ul</span><br><span class="line">    className=<span class="string">&quot;marquee-content&quot;</span></span><br><span class="line">    style=&#123;&#123;</span><br><span class="line">        <span class="attr">transform</span>: <span class="string">`translateY(<span class="subst">$&#123;translateY&#125;</span>px)`</span></span><br><span class="line">    &#125;&#125;</span><br><span class="line">&gt;</span><br><span class="line">    &#123;textsWithFirst.<span class="title function_">map</span>(<span class="function">(<span class="params">text, index</span>) =&gt;</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;index&#125;</span> <span class="attr">className</span>=<span class="string">&quot;marquee-item&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            &#123;text&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line">    ))&#125;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+<p>为了让滚动效果更加自然，我们还添加了一个渐变遮罩，遮挡住文案列表的上下边缘：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.marquee-mask &#123;</span><br><span class="line">    background-image: linear-gradient(to bottom, #fff 0%, transparent 50%, transparent 50%, #fff 100%);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="组件使用"><a href="#组件使用" class="headerlink" title="组件使用"></a>组件使用</h3><p>使用起来非常简单，只需要传入文案数组即可：</p>
+<figure class="highlight tsx"><table><tr><td class="code"><pre><span class="line">&lt;<span class="title class_">SeamlessMarquee</span> texts=&#123;warningArr&#125; interval=&#123;<span class="number">3000</span>&#125; /&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="源码全览"><a href="#源码全览" class="headerlink" title="源码全览"></a>源码全览</h3><p><strong>SeamlessMarquee.tsx:</strong></p>
+<figure class="highlight tsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./index.scss&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">SeamlessMarqueeProps</span> &#123;</span><br><span class="line">    <span class="attr">texts</span>: <span class="built_in">string</span>[]; <span class="comment">// 轮播文案</span></span><br><span class="line">    interval?: <span class="built_in">number</span>; <span class="comment">// 轮播间隔，单位毫秒，默认1000毫秒（每秒滚动一组文案）</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">SeamlessMarqueeState</span> &#123;</span><br><span class="line">    <span class="attr">translateY</span>: <span class="built_in">number</span>; <span class="comment">// 滚动距离</span></span><br><span class="line">    <span class="attr">currentTextIndex</span>: <span class="built_in">number</span>; <span class="comment">// 当前显示的文案索引</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SeamlessMarquee</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span>&lt;</span><br><span class="line">    <span class="title class_">SeamlessMarqueeProps</span>,</span><br><span class="line">    <span class="title class_">SeamlessMarqueeState</span></span><br><span class="line">&gt; &#123;</span><br><span class="line">    <span class="comment">// 滚动容器</span></span><br><span class="line">    <span class="keyword">private</span> <span class="attr">setMarqueeContentRef</span>: <span class="built_in">any</span> = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">marqueeInterval</span>: <span class="built_in">any</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">constructor</span> (<span class="params"><span class="attr">props</span>: <span class="title class_">SeamlessMarqueeProps</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">super</span>(props);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">            <span class="attr">translateY</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="attr">currentTextIndex</span>: <span class="number">0</span>,</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">componentDidMount</span> () &#123;</span><br><span class="line">        <span class="comment">// 开始滚动</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">startMarquee</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">componentWillUnmount</span> () &#123;</span><br><span class="line">        <span class="comment">// 停止滚动</span></span><br><span class="line">        <span class="variable language_">window</span>.<span class="built_in">clearInterval</span>(<span class="variable language_">this</span>.<span class="property">marqueeInterval</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * desc 动画逻辑抽离</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@author</span> <span class="variable">Lang</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@date</span> 2024-06-04 16:24:17</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    rollAnimation = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; texts &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 复制第一个文案到最后一个，实现无缝衔接</span></span><br><span class="line">        <span class="keyword">const</span> textsWithFirst = [...texts, texts[<span class="number">0</span>]];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">const</span> &#123; currentTextIndex &#125; = <span class="variable language_">this</span>.<span class="property">state</span>;</span><br><span class="line">        <span class="comment">// 计算下一个文案索引</span></span><br><span class="line">        <span class="keyword">const</span> nextTextIndex = (currentTextIndex + <span class="number">1</span>) % textsWithFirst.<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 计算滚动距离</span></span><br><span class="line">        <span class="keyword">const</span> nextTranslateY = nextTextIndex * -<span class="number">36</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果滚动到最后一个文案，需要瞬间回到第一个文案</span></span><br><span class="line">        <span class="keyword">if</span> (currentTextIndex === textsWithFirst.<span class="property">length</span> - <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 瞬间回到第一个文案 - 关闭过渡动画</span></span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">setMarqueeContentRef</span>.<span class="property">style</span>.<span class="property">transition</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">setMarqueeContentRef</span>.<span class="property">style</span>.<span class="property">transform</span> = <span class="string">&#x27;translateY(0)&#x27;</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 等待回到第一个文案后，再开启过渡动画</span></span><br><span class="line">            <span class="comment">// window.setTimeout 的作用是确保在 translateY 设置为 0 之后，再开启过渡动画，避免视觉上“回拉”的感觉</span></span><br><span class="line">            <span class="variable language_">window</span>.<span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                <span class="comment">// 第一个文案在最后一个文案的后面，所以在视觉上已经是第二个文案了</span></span><br><span class="line">                <span class="comment">// 设置第二个文案为当前文案，用于过渡动画</span></span><br><span class="line">                <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">                    <span class="attr">translateY</span>: -<span class="number">36</span>,</span><br><span class="line">                    <span class="attr">currentTextIndex</span>: <span class="number">1</span>,</span><br><span class="line">                &#125;, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">                    <span class="variable language_">this</span>.<span class="property">setMarqueeContentRef</span>.<span class="property">style</span>.<span class="property">transition</span> = <span class="string">&#x27;transform 0.5s&#x27;</span>;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;, <span class="number">0</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">            <span class="attr">translateY</span>: nextTranslateY,</span><br><span class="line">            <span class="attr">currentTextIndex</span>: nextTextIndex,</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 开始滚动</span></span><br><span class="line">    startMarquee = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; interval = <span class="number">1000</span> &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">marqueeInterval</span> = <span class="variable language_">window</span>.<span class="built_in">setInterval</span>(<span class="variable language_">this</span>.<span class="property">rollAnimation</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>), interval);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">render</span> () &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; texts &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line">        <span class="keyword">const</span> &#123; translateY &#125; = <span class="variable language_">this</span>.<span class="property">state</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 复制第一个文案到最后一个，实现无缝衔接</span></span><br><span class="line">        <span class="keyword">const</span> textsWithFirst = [...texts, texts[<span class="number">0</span>]];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;seamless-marquee&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;marquee-mask&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">ul</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">className</span>=<span class="string">&quot;marquee-content&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">ref</span>=<span class="string">&#123;ref</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">                        this.setMarqueeContentRef = ref;</span></span><br><span class="line"><span class="language-xml">                    &#125;&#125;</span></span><br><span class="line"><span class="language-xml">                    style=&#123;&#123;</span></span><br><span class="line"><span class="language-xml">                        transform: `translateY($&#123;translateY&#125;px)`</span></span><br><span class="line"><span class="language-xml">                    &#125;&#125;</span></span><br><span class="line"><span class="language-xml">                &gt;</span></span><br><span class="line"><span class="language-xml">                    &#123;textsWithFirst.map((text, index) =&gt; (</span></span><br><span class="line"><span class="language-xml">                        <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;index&#125;</span> <span class="attr">className</span>=<span class="string">&quot;marquee-item&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                            &#123;text&#125;</span></span><br><span class="line"><span class="language-xml">                        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    ))&#125;</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">SeamlessMarquee</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>SeamlessMarquee.scss:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.seamless-marquee &#123;</span><br><span class="line">    width: 380px;</span><br><span class="line">    height: 36px;</span><br><span class="line">    overflow: hidden;</span><br><span class="line">    position: relative;</span><br><span class="line">    font-size: 12px;</span><br><span class="line"></span><br><span class="line">    .marquee-mask &#123;</span><br><span class="line">        position: absolute;</span><br><span class="line">        left: 0;</span><br><span class="line">        top: 0;</span><br><span class="line">        content: &#x27;&#x27;;</span><br><span class="line">        display: block;</span><br><span class="line">        background-image: linear-gradient(to bottom, #fff 0%, transparent 50%, transparent 50%, #fff 100%);</span><br><span class="line">        width: 100%;</span><br><span class="line">        height: 100%;</span><br><span class="line">        z-index: 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .marquee-content &#123;</span><br><span class="line">        display: flex;</span><br><span class="line">        flex-direction: column;</span><br><span class="line">        position: absolute;</span><br><span class="line">        top: 0;</span><br><span class="line">        left: 0;</span><br><span class="line">        width: 100%;</span><br><span class="line">        height: auto;</span><br><span class="line">        transition: transform .5s;</span><br><span class="line"></span><br><span class="line">        .marquee-item &#123;</span><br><span class="line">            display: flex;</span><br><span class="line">            align-items: center;</span><br><span class="line">            height: 36px;</span><br><span class="line">            line-height: 36px;</span><br><span class="line">            color: #FF4D4A;</span><br><span class="line">            font-size: 12px;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过以上步骤，我们成功开发了一个 React 无缝滚动跑马灯组件，满足了项目的需求，并且代码简洁易懂，方便维护。在实际项目中，我们可以根据具体需求，对组件进行进一步的扩展和优化，比如添加自定义样式、暂停/继续滚动等功能。</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>React</tag>
+        <tag>跑马灯</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一个基本的拦截器实现示例：Axios 拦截器</title>
+    <url>/xiaolangwiki/2022/01/12/interceptor/</url>
+    <content><![CDATA[<h2 id="一个基本的拦截器实现示例："><a href="#一个基本的拦截器实现示例：" class="headerlink" title="一个基本的拦截器实现示例："></a>一个基本的拦截器实现示例：</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">InterceptorManager</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">handlers</span> = [];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">use</span>(<span class="params">fulfilled, rejected</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">handlers</span>.<span class="title function_">push</span>(&#123;</span><br><span class="line">      fulfilled,</span><br><span class="line">      rejected</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">handlers</span>.<span class="property">length</span> - <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">eject</span>(<span class="params">id</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">handlers</span>[id]) &#123;</span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">handlers</span>[id] = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Axios</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">interceptors</span> = &#123;</span><br><span class="line">      <span class="attr">request</span>: <span class="keyword">new</span> <span class="title class_">InterceptorManager</span>(),</span><br><span class="line">      <span class="attr">response</span>: <span class="keyword">new</span> <span class="title class_">InterceptorManager</span>()</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">request</span>(<span class="params">config</span>) &#123;</span><br><span class="line">    <span class="comment">// 创建 Promise 链</span></span><br><span class="line">    <span class="keyword">let</span> chain = [</span><br><span class="line">      <span class="function">(<span class="params">config</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Sending Request:&#x27;</span>, config);</span><br><span class="line">        <span class="keyword">return</span> config;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="literal">undefined</span></span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 添加请求拦截器</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="property">handlers</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">interceptor</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (interceptor !== <span class="literal">null</span>) &#123;</span><br><span class="line">        chain.<span class="title function_">unshift</span>(interceptor.<span class="property">fulfilled</span>, interceptor.<span class="property">rejected</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 添加响应拦截器</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">interceptors</span>.<span class="property">response</span>.<span class="property">handlers</span>.<span class="title function_">forEach</span>(<span class="function">(<span class="params">interceptor</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (interceptor !== <span class="literal">null</span>) &#123;</span><br><span class="line">        chain.<span class="title function_">push</span>(interceptor.<span class="property">fulfilled</span>, interceptor.<span class="property">rejected</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行 Promise 链</span></span><br><span class="line">    <span class="keyword">let</span> promise = <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(config);</span><br><span class="line">    <span class="keyword">while</span> (chain.<span class="property">length</span>) &#123;</span><br><span class="line">      promise = promise.<span class="title function_">then</span>(chain.<span class="title function_">shift</span>(), chain.<span class="title function_">shift</span>());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> promise;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用示例</span></span><br><span class="line"><span class="keyword">const</span> axios = <span class="keyword">new</span> <span class="title class_">Axios</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加请求拦截器</span></span><br><span class="line">axios.<span class="property">interceptors</span>.<span class="property">request</span>.<span class="title function_">use</span>(</span><br><span class="line">  <span class="function">(<span class="params">config</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Request Interceptor 1&#x27;</span>);</span><br><span class="line">    config.<span class="property">headers</span> = &#123; <span class="string">&#x27;X-Custom-Header&#x27;</span>: <span class="string">&#x27;foo&#x27;</span> &#125;;</span><br><span class="line">    <span class="keyword">return</span> config;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(error);</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加响应拦截器</span></span><br><span class="line">axios.<span class="property">interceptors</span>.<span class="property">response</span>.<span class="title function_">use</span>(</span><br><span class="line">  <span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Response Interceptor 1&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> response;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Promise</span>.<span class="title function_">reject</span>(error);</span><br><span class="line">  &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发送请求</span></span><br><span class="line">axios.<span class="title function_">request</span>(&#123; <span class="attr">url</span>: <span class="string">&#x27;https://api.example.com/data&#x27;</span> &#125;)</span><br><span class="line">  .<span class="title function_">then</span>(<span class="function"><span class="params">response</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Final Response:&#x27;</span>, response))</span><br><span class="line">  .<span class="title function_">catch</span>(<span class="function"><span class="params">error</span> =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;Error:&#x27;</span>, error));</span><br></pre></td></tr></table></figure>
+<p>这个简化版本包含了以下关键部分：</p>
+<ol>
+<li><code>InterceptorManager</code> 类：管理拦截器的添加和移除。</li>
+<li><code>Axios</code> 类：包含请求方法和拦截器管理。</li>
+<li><code>request</code> 方法：<ul>
+<li>创建一个包含实际请求处理函数的初始 Promise 链。</li>
+<li>将请求拦截器添加到链的开头。</li>
+<li>将响应拦截器添加到链的末尾。</li>
+<li>使用 <code>while</code> 循环执行整个 Promise 链。</li>
+</ul>
+</li>
+<li>使用示例：展示了如何添加拦截器和发送请求。</li>
+</ol>
+<p>这个实现展示了拦截器的基本工作原理：</p>
+<ul>
+<li>拦截器被存储在数组中。</li>
+<li>请求时，创建一个 Promise 链，包含所有拦截器和实际的请求处理。</li>
+<li>Promise 链按顺序执行，允许每个拦截器修改请求或响应。</li>
+</ul>
+<p>实际的 Axios 库更加复杂</p>
+<h2 id="拦截器实现的核心"><a href="#拦截器实现的核心" class="headerlink" title="拦截器实现的核心"></a>拦截器实现的核心</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> promise = <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(config);</span><br><span class="line"><span class="keyword">while</span> (chain.<span class="property">length</span>) &#123;</span><br><span class="line">  promise = promise.<span class="title function_">then</span>(chain.<span class="title function_">shift</span>(), chain.<span class="title function_">shift</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码是拦截器实现的核心，它创建了一个 Promise 链来依次执行所有的拦截器和实际的请求。让我们逐步分析：</p>
+<ol>
+<li><code>let promise = Promise.resolve(config);</code><ul>
+<li>这行创建了一个立即解决（resolve）的 Promise，初始值是 config 对象。</li>
+<li>这个 Promise 将作为整个链的起点。</li>
+</ul>
+</li>
+<li><code>while (chain.length) &#123; ... &#125;</code><ul>
+<li>这个循环会一直执行，直到 chain 数组为空。</li>
+<li>chain 数组包含了所有的拦截器函数和实际的请求处理函数。</li>
+</ul>
+</li>
+<li><code>promise = promise.then(chain.shift(), chain.shift());</code><ul>
+<li><code>chain.shift()</code> 移除并返回数组的第一个元素。</li>
+<li>这里每次调用 <code>shift()</code> 两次，分别获取成功回调和失败回调。</li>
+<li><code>promise.then()</code> 将这两个回调添加到当前 Promise 的后面，形成一个新的 Promise。</li>
+<li>新的 Promise 被赋值回 <code>promise</code> 变量，准备下一次循环。</li>
+</ul>
+</li>
+</ol>
+<p>工作流程示例：</p>
+<p>假设我们有以下拦截器和请求处理函数：</p>
+<ul>
+<li>请求拦截器 1: requestInterceptor1</li>
+<li>请求拦截器 2: requestInterceptor2</li>
+<li>实际请求处理: sendRequest</li>
+<li>响应拦截器 1: responseInterceptor1</li>
+<li>响应拦截器 2: responseInterceptor2</li>
+</ul>
+<p>初始的 chain 数组可能如下：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">[</span><br><span class="line">  requestInterceptor2, errorHandler2,</span><br><span class="line">  requestInterceptor1, errorHandler1,</span><br><span class="line">  sendRequest, <span class="literal">undefined</span>,</span><br><span class="line">  responseInterceptor1, errorHandler3,</span><br><span class="line">  responseInterceptor2, errorHandler4</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>循环执行过程：</p>
+<ol>
+<li>第一次循环：<code>promise.then(requestInterceptor2, errorHandler2)</code></li>
+<li>第二次循环：<code>promise.then(requestInterceptor1, errorHandler1)</code></li>
+<li>第三次循环：<code>promise.then(sendRequest, undefined)</code></li>
+<li>第四次循环：<code>promise.then(responseInterceptor1, errorHandler3)</code></li>
+<li>第五次循环：<code>promise.then(responseInterceptor2, errorHandler4)</code></li>
+</ol>
+<p>这样，通过不断地将拦截器和请求处理函数添加到 Promise 链中，我们创建了一个完整的执行序列，确保了所有操作按照正确的顺序执行。</p>
+<p>这种实现方式的优点是：</p>
+<ol>
+<li>灵活性：可以轻松添加或移除拦截器。</li>
+<li>异步支持：每个拦截器都可以是异步的。</li>
+<li>错误处理：每个步骤都有相应的错误处理机制。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>工具</category>
+        <category>Axios</category>
+      </categories>
+      <tags>
+        <tag>axios</tag>
+        <tag>interceptor</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解密10x程序员的思考方式:一个大三学生的领悟</title>
+    <url>/xiaolangwiki/2022/07/23/read-2022-07-23/</url>
+    <content><![CDATA[<h1 id="解密10x程序员的思考方式-一个大三学生的领悟"><a href="#解密10x程序员的思考方式-一个大三学生的领悟" class="headerlink" title="解密10x程序员的思考方式:一个大三学生的领悟"></a>解密10x程序员的思考方式:一个大三学生的领悟</h1><p>大家好,我是一名大三的计算机系学生。最近,我在实习中遇到了一位被同事们称为”10x程序员”的大神。这让我开始思考:到底什么是10x程序员?他们是如何思考的?经过一段时间的观察和学习,我有了一些新的认识,今天就和大家分享一下。</p>
+<p>首先,我们得搞清楚什么是10x程序员。简单来说,就是能够创造10倍于普通程序员价值的超级开发者。但这并不意味着他们要比别人多写10倍的代码,而是他们的思考方式和解决问题的能力远超常人。</p>
+<p>那么,这些10x程序员是如何思考的呢?</p>
+<ol>
+<li>系统化思考:降低偶然复杂度</li>
+</ol>
+<p>记得有一次,我们团队接到一个看似简单的需求:给APP添加一个新的功能按钮。大多数人二话不说就开始coding了,但是我们团队的10x大神却先停下来思考。他说:”等等,我们先来分析一下这个需求背后的真正目的。”</p>
+<p>他提出了一个通用的思考框架:</p>
+<ul>
+<li>第一步:确定现状</li>
+<li>第二步:明确目标</li>
+<li>第三步:制定实现路径</li>
+</ul>
+<p>这个框架看似简单,但却能帮助我们快速理清思路,避免陷入不必要的复杂性中。</p>
+<ol>
+<li>明确真实目标</li>
+</ol>
+<p>大神并不满足于表面的需求描述。他开始追问产品经理:”这个新功能的真正目标是什么?我们要解决用户的什么痛点?有没有其他方式可以更好地达成这个目标?”</p>
+<p>这些问题让我意识到,作为程序员,我们不应该只是一个代码搬运工。我们需要深入理解需求背后的真实目标,这样才能提供最优解决方案。</p>
+<ol>
+<li>任务分解</li>
+</ol>
+<p>确定了目标后,大神开始将整个任务分解成小块。他说:”把大象放进冰箱需要三步,我们也要把复杂的任务拆解成可管理的小任务。”</p>
+<p>这种方法不仅让整个开发过程变得清晰可控,也方便了团队协作和进度跟踪。</p>
+<ol>
+<li>加强沟通反馈</li>
+</ol>
+<p>在开发过程中,大神特别强调沟通的重要性。他经常组织简短的站会,确保每个人都清楚自己的任务和整个项目的进展。</p>
+<p>他说:”代码是写给人看的,顺便能在机器上运行。”这句话让我明白了,良好的沟通不仅能提高开发效率,还能降低代码的维护成本。</p>
+<ol>
+<li>实现自动化</li>
+</ol>
+<p>最让我惊讶的是,大神总能在短时间内完成看似不可能的任务。他的秘诀就是:自动化。</p>
+<p>从代码部署到测试,他都尽可能地实现自动化。他说:”重复的工作交给机器,我们的大脑应该专注于创造性的思考。”</p>
+<p>这让我想起了自己曾经熬夜手动部署代码的经历,顿时感觉自己还有很长的路要走。</p>
+<ol>
+<li>持续学习和反思</li>
+</ol>
+<p>大神总是在学习新东西。无论是新的编程语言,还是最新的技术趋势,他都保持着强烈的好奇心。</p>
+<p>他经常说:”在这个行业,如果你觉得自己已经够厉害了,那就意味着你已经开始落后了。”</p>
+<p>这句话深深地触动了我。作为一个即将毕业的学生,我更应该保持学习的热情,不断提升自己。</p>
+<p>结语:</p>
+<p>通过观察和学习10x程序员的思考方式,我意识到成为一个优秀的程序员不仅仅是技术问题,更重要的是思维方式的转变。</p>
+<p>系统化思考、明确目标、任务分解、加强沟通、实现自动化、持续学习,这些原则不仅适用于编程,也适用于我们的学习和生活。</p>
+<p>作为一个即将步入职场的准程序员,我决定从现在开始就培养这种思考方式。也许我现在还不是10x程序员,但我相信只要坚持这种思维模式,终有一天我也能成为别人眼中的”大神”。<br>最后,祝大家都能成为10x程序员!</p>
+]]></content>
+      <categories>
+        <category>思考</category>
+      </categories>
+      <tags>
+        <tag>思考方式</tag>
+        <tag>程序员</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>程序员效率大挑战：别让&quot;偶然复杂度&quot;坑了你！</title>
+    <url>/xiaolangwiki/2022/02/18/read-2022-02-18/</url>
+    <content><![CDATA[<h1 id="程序员效率大挑战：别让”偶然复杂度”坑了你！"><a href="#程序员效率大挑战：别让”偶然复杂度”坑了你！" class="headerlink" title="程序员效率大挑战：别让”偶然复杂度”坑了你！"></a>程序员效率大挑战：别让”偶然复杂度”坑了你！</h1><p>嘿，大家好！我是一名22岁的大三计算机系学生，最近读到了一篇超级有意思的文章，讲的是程序员工作效率的问题。说实话，这篇文章真的让我有点震惊，也让我对未来的程序员生涯有了新的认识。我想跟大家分享一下我的想法，希望能给同样即将踏入IT圈的小伙伴们一些启发。</p>
+<p>首先，这篇文章提到了一个叫”偶然复杂度”的概念。说白了，就是我们程序员经常忙得要死要活，结果解决的问题根本不是程序本身的问题，而是因为选错了工具或方法导致的额外麻烦。我当时就想，我靠，这不就是在搬起石头砸自己的脚吗？</p>
+<p>想想看，我们每天加班加点，以为自己在攻克什么技术难关，结果可能只是在解决自己制造的问题。这就好比你本来要做一道简单的炒饭，结果非要用高压锅，搞得自己手忙脚乱，最后还把厨房炸了（别笑，我室友就干过这种事）。</p>
+<p>文章里还说，业界其实有很多提高效率的最佳实践，但问题是这些实践之间没什么明显联系，搞得人很难全面掌握。我听了直呼太真实了！想想我们上课学的那些编程范式、设计模式、敏捷开发…老师讲的时候头头是道，到了实际项目里，我就傻眼了，根本不知道该怎么用。</p>
+<p>不过，这篇文章的作者也不是光吐槽，人家给出了四个超实用的原则：以终为始、任务分解、沟通反馈、自动化。乍一看，这四个原则简单得像是小学生都懂的道理。但仔细想想，在实际工作中做到这些，还真不容易。</p>
+<p>拿”以终为始”来说吧。我在做课程项目的时候，经常是看到题目就开始狂敲代码，结果写到一半发现理解错题目意思，白忙活一场。如果一开始就花点时间想清楚最终要达到什么效果，再倒推着设计每一步，肯定能少走不少弯路。</p>
+<p>“任务分解”这个我倒是有点体会。我大一刚入学的时候，就被老师教导过，要把一个大项目分解成多个小任务，然后每个人负责一个任务。结果我当时就被教导得头头是道，觉得这可真是一件很有意思的事情。后来我参加过一个学校项目，光是看项目描述就觉得头大。但是项目负责人特别厉害，把整个项目分解成一个个小任务，分配给不同班级的学生。结果我们这群素未谋面的人，愣是合作得挺顺畅。</p>
+<p>至于”沟通反馈”和”自动化”，老实说，在学校里接触得不多。但我暑假实习的时候，可算是见识到了它们的威力。经常沟通真的能避免很多不必要的返工，而自动化测试和部署，简直是懒人福音啊！要是早点学会这些，指不定我的期末项目能少掉几根头发呢。</p>
+<p>不过，文章里也说了，这些原则看着简单，做起来可不容易。比如说，在项目一开始就花大力气做规划和自动化，总觉得是在浪费时间。但是经历过几次”补漏洞”的痛苦之后，我才明白，早做准备真的能省下后面的不少事。</p>
+<p>作为一个马上就要进入职场的准程序员，这篇文章给了我一记当头棒喝。它让我意识到，成为一个牛逼的程序员，不只是要会写代码，更重要的是要学会高效工作。我们得学会避开那些自己给自己设的坑，把精力花在真正有价值的问题上。</p>
+<p>所以，咱们以后写代码的时候，可得擦亮眼睛啊！别让那个什么”偶然复杂度”把咱们坑了。让我们一起努力，用聪明的方式工作，创造出真正牛逼的软件，改变这个世界！</p>
+<p>好了，我的碎碎念就到这里。</p>
+]]></content>
+      <categories>
+        <category>思考</category>
+      </categories>
+      <tags>
+        <tag>读书</tag>
+        <tag>效率</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从&quot;登录&quot;到&quot;人生&quot;:一个准程序员的&quot;以终为始&quot;领悟</title>
+    <url>/xiaolangwiki/2022/09/21/read-2022-09-21/</url>
+    <content><![CDATA[<h1 id="从”登录”到”人生”-一个准程序员的”以终为始”领悟"><a href="#从”登录”到”人生”-一个准程序员的”以终为始”领悟" class="headerlink" title="从”登录”到”人生”:一个准程序员的”以终为始”领悟"></a>从”登录”到”人生”:一个准程序员的”以终为始”领悟</h1><p>大家好,我是小浪,一个即将毕业的软件工程专业学生。最近在做项目的时候,我突然对”以终为始”这个概念有了全新的认识,感觉整个人都升级了,忍不住想和大家分享一下。</p>
+<p>还记得大二那会儿,我们上软件工程课时做过一个设计登录功能的小练习。那时候的我,满脑子都是炫酷的界面设计、花里胡哨的动画效果,甚至还想着加个人脸识别啥的。结果呢?老师看完我的设计后,只说了一句话:”你有考虑过用户真正需要的是什么吗?”</p>
+<p>我懵了。是啊,我设计了半天,好像真的没想过用户到底需要什么。这个小小的挫折让我开始思考:我们做事情的时候,是不是应该先想想最终要达到什么效果,而不是一头扎进去就开始干?</p>
+<p>后来在实习的时候,我遇到了一个特别厉害的mentor。有一次我们在讨论一个新功能,我又开始滔滔不绝地说起实现方案。他听了一会儿,打断我说:”小浪,先别急着谈怎么做。咱们先想想,如果这个功能做好了,会给用户带来什么样的体验?它会解决用户什么问题?”</p>
+<p>这一刻,我仿佛被打开了新世界的大门。原来,真正高明的程序员,不是写代码最快的,而是最懂得思考目标和结果的。</p>
+<p>从那以后,我开始尝试用”以终为始”的方式来做事。比如在做毕业设计的时候,我没有急着写代码,而是先花了两周时间去调研用户需求,设想产品上线后的场景。这个过程让我发现了很多之前忽视的细节,最后做出来的作品不仅得到了老师的肯定,还真的解决了一些同学的实际问题。</p>
+<p>现在回想起来,我发现”以终为始”其实不只是一种工作方法,更是一种生活态度。它让我学会了在行动之前先思考目标,在忙碌之中不忘初心。</p>
+<p>就拿找工作来说吧。很多同学一头扎进各种面试题海里,但我选择先想清楚自己理想的职业发展路径。结果是,虽然我可能刷题没他们多,但在面试的时候能够清晰地表达自己的职业规划,反而得到了面试官的青睐。</p>
+<p>当然,实践”以终为始”并不总是容易的。有时候,我也会陷入日常琐事,忘记了最初的目标。但每当我感到迷茫或者压力山大的时候,我就会停下来问自己:”我最终想要达到什么样的结果?”这个简单的问题总能让我重新找到方向。</p>
+<p>对于我们这些即将踏入职场的准程序员来说,”以终为始”的思维方式尤为重要。因为我们的工作本质上是在将想象变为现实,如果连自己想要的结果都不清楚,又怎么能写出好的代码呢?</p>
+<p>所以,我想对所有和我一样的学弟学妹们说:不要急着埋头苦干,先抬头看看你要到达的方向。无论是学习、工作还是生活,都要先想清楚你想要的结果是什么,然后再规划你的行动。这样,你的每一分努力都不会白费,每一步都会离你的目标更近一些。</p>
+<p>最后,我想用我们专业常说的一句话来结束这篇文章:”代码是怎么写的不重要,重要的是它能不能解决问题。”同样,生活也是如此,重要的不是你多么忙碌,而是你是否在朝着自己想要的方向前进。</p>
+]]></content>
+      <categories>
+        <category>思考</category>
+      </categories>
+      <tags>
+        <tag>程序员</tag>
+        <tag>思考</tag>
+        <tag>编程</tag>
+      </tags>
   </entry>
 </search>
