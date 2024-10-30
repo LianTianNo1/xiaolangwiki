@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/xiaolangwiki/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/xiaolangwiki/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/xiaolangwiki/images/favicon16.ico">
+  <link rel="mask-icon" href="/xiaolangwiki/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/xiaolangwiki/css/main.css">
+
+
+<link rel="stylesheet" href="/xiaolangwiki/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"liantianno1.github.io","root":"/xiaolangwiki/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","enable":true,"active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="从零开始，一步步学习微前端原文：https:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;7204723936914554937 前言 在实习的这段时间接触了很多新东西，比如微前端就是其中之一，在这里小浪就来聊聊微前端中的 qiankun 框架  1.介绍1.1 为什么需要微前端 当我们开发大型的前端应用时，通常需要将应用拆分成多个子应用进行开发和维护。这时候微前端就显得尤为重要。微前端是一种架构模式，它将前">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零开始 一步步学习微前端">
+<meta property="og:url" content="https://liantianno1.github.io/xiaolangwiki/2023/02/27/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B-%E4%B8%80%E6%AD%A5%E6%AD%A5%E5%AD%A6%E4%B9%A0%E5%BE%AE%E5%89%8D%E7%AB%AF/index.html">
+<meta property="og:site_name" content="小浪wiki">
+<meta property="og:description" content="从零开始，一步步学习微前端原文：https:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;7204723936914554937 前言 在实习的这段时间接触了很多新东西，比如微前端就是其中之一，在这里小浪就来聊聊微前端中的 qiankun 框架  1.介绍1.1 为什么需要微前端 当我们开发大型的前端应用时，通常需要将应用拆分成多个子应用进行开发和维护。这时候微前端就显得尤为重要。微前端是一种架构模式，它将前">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-27T02:07:54.000Z">
+<meta property="article:modified_time" content="2023-02-27T02:07:54.000Z">
+<meta property="article:author" content="小浪wiki">
+<meta property="article:tag" content="微前端">
+<meta property="article:tag" content="qiankun">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://liantianno1.github.io/xiaolangwiki/2023/02/27/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B-%E4%B8%80%E6%AD%A5%E6%AD%A5%E5%AD%A6%E4%B9%A0%E5%BE%AE%E5%89%8D%E7%AB%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>从零开始 一步步学习微前端 | 小浪wiki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <meta name="referrer" content="no-referrer"/>
+<link rel="alternate" href="/xiaolangwiki/atom.xml" title="小浪wiki" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/xiaolangwiki/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浪wiki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一个关于编程、计算机、软件工程、互联网</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/xiaolangwiki/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/xiaolangwiki/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/xiaolangwiki/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/xiaolangwiki/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/LianTianNo1" class="github-corner" title="LianTianNo1&#96; GitHub" aria-label="LianTianNo1&#96; GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liantianno1.github.io/xiaolangwiki/2023/02/27/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B-%E4%B8%80%E6%AD%A5%E6%AD%A5%E5%AD%A6%E4%B9%A0%E5%BE%AE%E5%89%8D%E7%AB%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/xiaolangwiki/images/avatar.png">
+      <meta itemprop="name" content="小浪wiki">
+      <meta itemprop="description" content="一个关于编程、计算机、软件工程、互联网的知识库。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浪wiki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从零开始 一步步学习微前端
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-02-27 10:07:54" itemprop="dateCreated datePublished" datetime="2023-02-27T10:07:54+08:00">2023-02-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/xiaolangwiki/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="从零开始，一步步学习微前端"><a href="#从零开始，一步步学习微前端" class="headerlink" title="从零开始，一步步学习微前端"></a>从零开始，一步步学习微前端</h2><p>原文：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7204723936914554937">https://juejin.cn/post/7204723936914554937</a></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>在实习的这段时间接触了很多新东西，比如微前端就是其中之一，在这里小浪就来聊聊微前端中的 qiankun 框架</p>
+</blockquote>
+<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h2><h3 id="1-1-为什么需要微前端"><a href="#1-1-为什么需要微前端" class="headerlink" title="1.1 为什么需要微前端"></a>1.1 为什么需要微前端</h3><blockquote>
+<p>当我们开发大型的前端应用时，通常需要将应用拆分成多个子应用进行开发和维护。这时候微前端就显得尤为重要。微前端是一种架构模式，它将前端应用程序拆分成多个更小的、相对独立的部分，每个部分都可以独立开发、测试、部署和扩展。在微前端架构中，每个子应用都是一个独立的应用程序，可以独立部署和运行。这样，我们就可以将前端应用程序的开发、测试、部署和维护工作分解成多个更小的任务，提高应用程序的可维护性和可扩展性。微前端的实现方式有多种，其中比较常见的方式是通过 iframe、Web Components 或者 JavaScript 模块加载器来实现子应用的隔离和独立运行。通过这些方式，不同的子应用之间可以互相独立、互相通信，从而实现一个完整的前端应用程序。</p>
+</blockquote>
+<h3 id="1-2-如何判断自己的项目需要使用微前端"><a href="#1-2-如何判断自己的项目需要使用微前端" class="headerlink" title="1.2 如何判断自己的项目需要使用微前端"></a>1.2 如何判断自己的项目需要使用微前端</h3><ol>
+<li>项目功能逐渐增多，代码规模庞大，导致代码维护和开发效率低下；</li>
+<li>项目需要集成多个不同技术栈的模块或服务；</li>
+<li>团队成员分散，各自负责开发不同的模块或服务，需要实现独立开发和部署；</li>
+<li>项目需要支持独立的生命周期管理和版本控制；</li>
+<li>需要实现高可用性和弹性伸缩；</li>
+<li>需要实现动态加载和卸载子应用等场景。</li>
+</ol>
+<blockquote>
+<p>所以呢，小浪觉得如果项目具有上面这些特点，那么可以考虑使用微前端来优化项目架构和提升开发效率。</p>
+</blockquote>
+<h3 id="1-3-主应用和子应用"><a href="#1-3-主应用和子应用" class="headerlink" title="1.3 主应用和子应用"></a>1.3 主应用和子应用</h3><blockquote>
+<p><code>qiankun</code> 官网地址是：<a href="https://link.juejin.cn/?target=https%3A%2F%2Fqiankun.umijs.org%2F%25E3%2580%2582" title="https://qiankun.umijs.org/%E3%80%82">qiankun.umijs.org/</a></p>
+<p>官网的例子和教程都很详细，更新速度也快，大家想具体使用的可以去官网查阅</p>
+</blockquote>
+<p><code>qiankun</code> 是一个基于 Single-SPA 的微前端解决方案，它提供了一种轻量级的前端架构，可以将多个子应用整合成一个整体应用。<code>qiankun</code> 的架构包含两个主要的角色：</p>
+<ul>
+<li>主应用（Master Application）：负责整个应用的框架搭建、路由分发和子应用的注册和协调管理。</li>
+<li>子应用（Micro Application）：独立开发的前端应用程序，可以独立运行，也可以作为主应用的一个子模块运行。</li>
+</ul>
+<h3 id="1-4-qiankun-的特点"><a href="#1-4-qiankun-的特点" class="headerlink" title="1.4 qiankun 的特点"></a>1.4 qiankun 的特点</h3><p><code>qiankun</code> 的主要特点包括：</p>
+<ul>
+<li>完备的生命周期管理：<code>qiankun</code> 提供了完备的子应用生命周期管理方案，可以自动加载、启动、挂载、卸载和卸载子应用。</li>
+<li>灵活的应用路由分发：<code>qiankun</code> 提供了灵活的路由分发方案，可以自定义路由匹配规则，可以通过主应用的路由来匹配子应用的路由。</li>
+<li>独立的应用状态管理：<code>qiankun</code> 提供了独立的状态管理方案，每个子应用都可以独立管理自己的状态，主应用可以通过 props 方式传递数据给子应用，也可以通过事件总线的方式进行通信。</li>
+</ul>
+<h3 id="1-5-如何使用微前端"><a href="#1-5-如何使用微前端" class="headerlink" title="1.5 如何使用微前端"></a>1.5 如何使用微前端</h3><p>在使用 <code>qiankun</code> 构建微前端应用时，我们需要按照以下步骤进行：</p>
+<ol>
+<li>创建主应用：主应用负责整个应用的框架搭建、路由分发和子应用的注册和协调管理。可以使用任何前端框架进行开发，例如 React、Vue、Angular 等。</li>
+<li>创建子应用：子应用是独立开发的前端应用程序，可以独立运行，也可以作为主应用的一个子模块运行。每个子应用都可以使用任何前端框架进行开发，例如 React、Vue、Angular 等。</li>
+<li>注册子应用：主应用需要在启动时注册所有的子应用。注册时需要指定子应用的名称、访问地址、加载方式和路由配置等信息。</li>
+<li>启动子应用：主应用在启动时会自动加载和启动所有的子应用，每个子应用会根据配置的访问地址自动加载。</li>
+<li>协调子应用：主应用需要协调管理所有的子应用，包括子应用的加载、启动、挂载、卸载和卸载等操作。主应用可以通过 props 方式传递数据给子应用，也可以通过事件总线的方式进行通信。</li>
+<li>卸载子应用：当子应用不再需要时，主应用可以卸载子应用并释放资源，以提高系统的性能和稳定性。</li>
+</ol>
+<p>除此之外，<code>qiankun</code> 还提供了多种高级特性，例如异步加载、公共依赖、样式隔离、缓存优化等，可以进一步提高应用程序的性能和可维护性。</p>
+<h2 id="2-使用qiankun搭建例子："><a href="#2-使用qiankun搭建例子：" class="headerlink" title="2.使用qiankun搭建例子："></a>2.使用<code>qiankun</code>搭建例子：</h2><p>这里举一个 demo 例子，大家如果感兴趣可以按照小浪这样来进行搭建 一个简单的 <code>qiankun</code> 实例 demo</p>
+<ul>
+<li>主应用使用 React</li>
+<li>子应用 1 使用 Vue 3</li>
+<li>子应用 2 使用 React</li>
+</ul>
+<h3 id="2-1-创建主应用"><a href="#2-1-创建主应用" class="headerlink" title="2.1 创建主应用"></a>2.1 创建主应用</h3><p>首先需要创建主应用，我们使用 create-react-app 快速创建一个 React 应用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx create-react-app qiankun-example</span><br></pre></td></tr></table></figure>
+<p>安装依赖</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd qiankun-example</span><br><span class="line">npm install qiankun</span><br></pre></td></tr></table></figure>
+<p>修改主应用入口文件 src/index.js，加入以下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ReactDOM</span> <span class="keyword">from</span> <span class="string">&#x27;react-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; registerMicroApps, start &#125; <span class="keyword">from</span> <span class="string">&#x27;qiankun&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> apps = \[</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;vue3&#x27;</span>,</span><br><span class="line">    <span class="attr">entry</span>: <span class="string">&#x27;//localhost:8081&#x27;</span>,</span><br><span class="line">    <span class="attr">container</span>: <span class="string">&#x27;#subapp-viewport&#x27;</span>,</span><br><span class="line">    <span class="attr">activeRule</span>: <span class="string">&#x27;/vue3&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;react-app&#x27;</span>,</span><br><span class="line">    <span class="attr">entry</span>: <span class="string">&#x27;//localhost:8082&#x27;</span>,</span><br><span class="line">    <span class="attr">container</span>: <span class="string">&#x27;#subapp-viewport&#x27;</span>,</span><br><span class="line">    <span class="attr">activeRule</span>: <span class="string">&#x27;/react-app&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">\];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">registerMicroApps</span>(apps);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">start</span>();</span><br></pre></td></tr></table></figure>
+<p>在上面小浪首先定义了两个子应用，分别是 <code>Vue 3</code> 应用和 <code>React</code> 应用。然后通过 <code>registerMicroApps</code> 函数注册子应用，启动 <code>qiankun</code>。</p>
+<h3 id="2-2-创建子应用-1：Vue-3"><a href="#2-2-创建子应用-1：Vue-3" class="headerlink" title="2.2 创建子应用 1：Vue 3"></a>2.2 创建子应用 1：Vue 3</h3><p>在主应用中我们定义了一个名为 <code>vue3</code> 的子应用，需要先创建子应用的代码。在 <code>vue-cli</code> 中创建一个 <code>Vue 3</code> 应用(大家也可以用<code>vite</code>搭建，这里我用<code>vue-cli</code>)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vue create subapp-vue3</span><br></pre></td></tr></table></figure>
+<p>安装依赖：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd subapp-vue3</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<p>修改 src/main.js，加入以下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createApp &#125; <span class="keyword">from</span> <span class="string">&quot;vue&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&quot;./App.vue&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> instance = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">  instance = <span class="title function_">createApp</span>(<span class="title class_">App</span>).<span class="title function_">mount</span>(<span class="string">&quot;#app&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (process.<span class="property">env</span>.<span class="property">NODE_ENV</span> === <span class="string">&quot;development&quot;</span>) &#123;</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">bootstrap</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">mount</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">unmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">  instance.$destroy();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面小浪定义了子应用的渲染函数，用于在主应用中渲染子应用。在开发环境下直接渲染，而在生产环境下则通过导出 <code>bootstrap</code>、<code>mount</code> 和 <code>unmount</code> 函数，由 <code>qiankun</code> 调用。</p>
+<h3 id="2-3-创建子应用-2：React-应用"><a href="#2-3-创建子应用-2：React-应用" class="headerlink" title="2.3 创建子应用 2：React 应用"></a>2.3 创建子应用 2：React 应用</h3><p>我们需要先创建 React 应用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx create-react-app subapp-react</span><br></pre></td></tr></table></figure>
+<p>安装依赖：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd subapp-react</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<p>修改 src/index.js，加入以下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ReactDOM</span> <span class="keyword">from</span> <span class="string">&quot;react-dom&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&quot;./App&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> instance = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">App</span> /&gt;</span></span>, <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;root&quot;</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (process.<span class="property">env</span>.<span class="property">NODE_ENV</span> === <span class="string">&quot;development&quot;</span>) &#123;</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">bootstrap</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">mount</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">unmount</span>(<span class="params"></span>) &#123;</span><br><span class="line">  instance.$destroy();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里同样定义了子应用的渲染函数，用于在主应用中渲染子应用。在开发环境下直接渲染，而在生产环境下则通过导出 <code>bootstrap</code>、<code>mount</code> 和 <code>unmount</code> 函数，由 <code>qiankun</code> 调用。</p>
+<h3 id="2-4-启动应用"><a href="#2-4-启动应用" class="headerlink" title="2.4 启动应用"></a>2.4 启动应用</h3><p>我们需要分别启动主应用和两个子应用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">启动主应用</span><br><span class="line">cd qiankun-example</span><br><span class="line">npm start</span><br><span class="line"></span><br><span class="line">\# 启动 Vue 3 子应用</span><br><span class="line">cd subapp-vue3</span><br><span class="line">npm run serve -- --port 8081</span><br><span class="line"></span><br><span class="line">\# 启动 React 子应用</span><br><span class="line">cd subapp-react</span><br><span class="line">npm start -- --port 8082</span><br></pre></td></tr></table></figure>
+<p>然后在浏览器中访问 <strong>[<a target="_blank" rel="noopener" href="http://localhost:3000">http://localhost:3000</a></strong>，即可看到主应用的页面。在主应用中点击“Vue](<a href="https://link.juejin.cn/?target=http%3A%2F%2Flocalhost%3A3000**%25EF%25BC%258C%25E5%258D%25B3%25E5%258F%25AF%25E7%259C%258B%25E5%2588%25B0%25E4%25B8%25BB%25E5%25BA%2594%25E7%2594%25A8%25E7%259A%2584%25E9%25A1%25B5%25E9%259D%25A2%25E3%2580%2582%25E5%259C%25A8%25E4%25B8%25BB%25E5%25BA%2594%25E7%2594%25A8%25E4%25B8%25AD%25E7%2582%25B9%25E5%2587%25BB%25E2%2580%259CVue">https://link.juejin.cn/?target=http%3A%2F%2Flocalhost%3A3000**%25EF%25BC%258C%25E5%258D%25B3%25E5%258F%25AF%25E7%259C%258B%25E5%2588%25B0%25E4%25B8%25BB%25E5%25BA%2594%25E7%2594%25A8%25E7%259A%2584%25E9%25A1%25B5%25E9%259D%25A2%25E3%2580%2582%25E5%259C%25A8%25E4%25B8%25BB%25E5%25BA%2594%25E7%2594%25A8%25E4%25B8%25AD%25E7%2582%25B9%25E5%2587%25BB%25E2%2580%259CVue</a> “<a target="_blank" rel="noopener" href="http://localhost:3000\*\*%EF%BC%8C%E5%8D%B3%E5%8F%AF%E7%9C%8B%E5%88%B0%E4%B8%BB%E5%BA%94%E7%94%A8%E7%9A%84%E9%A1%B5%E9%9D%A2%E3%80%82%E5%9C%A8%E4%B8%BB%E5%BA%94%E7%94%A8%E4%B8%AD%E7%82%B9%E5%87%BB%E2%80%9CVue">http://localhost:3000\*\*%EF%BC%8C%E5%8D%B3%E5%8F%AF%E7%9C%8B%E5%88%B0%E4%B8%BB%E5%BA%94%E7%94%A8%E7%9A%84%E9%A1%B5%E9%9D%A2%E3%80%82%E5%9C%A8%E4%B8%BB%E5%BA%94%E7%94%A8%E4%B8%AD%E7%82%B9%E5%87%BB%E2%80%9CVue</a>“) 3”或“React App”按钮，即可跳转到对应的子应用页面。在子应用页面中修改内容，可以看到主应用中的内容也随之变化。</p>
+<h4 id="子应用中需要引入-qiankun："><a href="#子应用中需要引入-qiankun：" class="headerlink" title="子应用中需要引入 qiankun："></a>子应用中需要引入 <code>qiankun</code>：</h4><p>注意：在子应用中需要引入 <code>qiankun</code> 库，在 <code>Vue 3</code> 应用中需要安装 <code>qiankun</code>，如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install qiankun</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createApp &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; registerMicroApps, start &#125; <span class="keyword">from</span> <span class="string">&#x27;qiankun&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App.vue&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">createApp</span>(<span class="title class_">App</span>).<span class="title function_">mount</span>(<span class="string">&#x27;#app&#x27;</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">registerMicroApps</span>(\[...\]);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">start</span>();</span><br></pre></td></tr></table></figure>
+<p>React 子应用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ReactDOM</span> <span class="keyword">from</span> <span class="string">&#x27;react-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; registerMicroApps, start &#125; <span class="keyword">from</span> <span class="string">&#x27;qiankun&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">App</span> /&gt;</span></span>, <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">registerMicroApps</span>(\[...\]);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">start</span>();</span><br></pre></td></tr></table></figure>
+<p><code>registerMicroApps(\[...\])</code> 中的 […] 是一个数组，其中包含了注册的子应用的配置信息，每个配置项是一个对象，至少包含以下几个属性:</p>
+<ul>
+<li><code>name</code>：子应用的名称，需要保证唯一性。</li>
+<li><code>entry</code>：子应用的入口 URL。</li>
+<li><code>container</code>：子应用渲染的容器，通常是一个 DOM 元素或一个选择器。</li>
+<li><code>activeRule</code>：子应用的激活规则，指定该子应用应该在哪些 URL 下被激活。</li>
+</ul>
+<p>例如</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">registerMicroApps</span>(\[</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;vue3&#x27;</span>,</span><br><span class="line">    <span class="attr">entry</span>: <span class="string">&#x27;//localhost:8081&#x27;</span>,</span><br><span class="line">    <span class="attr">container</span>: <span class="string">&#x27;#vue3&#x27;</span>,</span><br><span class="line">    <span class="attr">activeRule</span>: <span class="string">&#x27;/vue3&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;react&#x27;</span>,</span><br><span class="line">    <span class="attr">entry</span>: <span class="string">&#x27;//localhost:8082&#x27;</span>,</span><br><span class="line">    <span class="attr">container</span>: <span class="string">&#x27;#react&#x27;</span>,</span><br><span class="line">    <span class="attr">activeRule</span>: <span class="string">&#x27;/react&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">\]);</span><br></pre></td></tr></table></figure>
+<p>以上代码注册了两个子应用 一个是 Vue 3 应用，一个是 React 应用。</p>
+<ol>
+<li><code>name</code> 分别为 ‘vue3’ 和 ‘react’，</li>
+<li><code>entry</code> 分别为 ‘//localhost:8081’ 和 ‘//localhost:8082’，</li>
+<li><code>container</code> 分别为 ‘#vue3’ 和 ‘#react’，</li>
+<li><code>activeRule</code> 分别为 ‘/vue3’ 和 ‘/react’。</li>
+</ol>
+<p>注意</p>
+<p>1.<code>entry</code> 属性的值应该是子应用的访问 URL，可以是本地开发服务器的地址，也可以是部署到服务器上的地址。<code>container</code> 属性的值可以是一个 DOM 元素，也可以是一个选择器字符串。在子应用中，渲染组件时需要将组件挂载到该容器中。<code>activeRule</code> 属性的值是一个路径匹配规则，表示子应用应该在哪些 URL 下被激活，可以是字符串或正则表达式。如果当前 URL 匹配了该规则，则该子应用会被激活。</p>
+<p>2.子应用中也需要写 <code>registerMicroApps(\[...\])</code> 来注册子应用。不同之处在于，子应用注册时需要指定一些配置项，以便于在主应用中正确加载和管理子应用。 在子应用中，通常会将 <code>registerMicroApps(\[...\])</code> 封装成一个函数，以便于主应用加载子应用时调用该函数注册子应用。例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; registerMicroApps, start &#125; <span class="keyword">from</span> <span class="string">&#x27;qiankun&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">initApp</span>(<span class="params"></span>) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">register</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">registerMicroApps</span>(\[</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;vue3&#x27;</span>,</span><br><span class="line">      <span class="attr">entry</span>: <span class="string">&#x27;//localhost:8081&#x27;</span>,</span><br><span class="line">      <span class="attr">container</span>: <span class="string">&#x27;#vue3&#x27;</span>,</span><br><span class="line">      <span class="attr">activeRule</span>: <span class="string">&#x27;/vue3&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  \]);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">start</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">bootstrap</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">initApp</span>();</span><br><span class="line">  <span class="title function_">render</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="variable language_">window</span>.\_\_POWERED\_BY\_QIANKUN\_\_) &#123;</span><br><span class="line">  <span class="title function_">bootstrap</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">mount</span>(<span class="params">props</span>) &#123;</span><br><span class="line">  <span class="title function_">bootstrap</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">unmount</span>(<span class="params">props</span>) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上面的代码中，register() 函数用来注册子应用，其中的配置项与主应用中的相同。bootstrap() 函数用来启动子应用，其中包含了初始化和渲染等过程。mount() 函数用来作为子应用加载时的入口，其中包含了注册、初始化、渲染等过程。unmount() 函数用来作为子应用卸载时的入口，其中包含了销毁子应用的过程。需要注意的是，如果子应用是独立运行的，即非通过主应用加载的，那么直接调用 bootstrap() 启动子应用即可。</p>
+<h3 id="2-5-全局状态管理"><a href="#2-5-全局状态管理" class="headerlink" title="2.5 全局状态管理"></a>2.5 全局状态管理</h3><p>主应用可以通过 <code>setGlobalState</code> 方法来设置全局状态，子应用可以通过 <code>onGlobalStateChange</code> 方法来监听全局状态的变化。这样，当主应用修改了全局状态时，所有的子应用都可以得到通知并进行相应的处理。</p>
+<blockquote>
+<p>在主应用中设置全局状态：</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; setGlobalState &#125; <span class="keyword">from</span> <span class="string">&quot;qiankun&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">setGlobalState</span>(&#123; <span class="attr">user</span>: &#123; <span class="attr">name</span>: <span class="string">&quot;lang&quot;</span>, <span class="attr">age</span>: <span class="number">18</span> &#125; &#125;);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在子应用中监听全局状态的变化：</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; onGlobalStateChange, setGlobalState &#125; <span class="keyword">from</span> <span class="string">&quot;qiankun&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">onGlobalStateChange</span>(<span class="function">(<span class="params">newState, prevousState</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;newState:&quot;</span>, newState);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;prevousState:&quot;</span>, prevousState);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">setGlobalState</span>(&#123; <span class="attr">user</span>: &#123; <span class="attr">name</span>: <span class="string">&quot;xiaolang&quot;</span>, <span class="attr">age</span>: <span class="number">20</span> &#125; &#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="2-6-子应用之间共享状态"><a href="#2-6-子应用之间共享状态" class="headerlink" title="2.6 子应用之间共享状态"></a>2.6 子应用之间共享状态</h3><p>子应用之间可以通过主应用作为中介来实现状态的共享。具体实现方式如下：</p>
+<blockquote>
+<p>在主应用中设置共享状态</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; setGlobalState &#125; <span class="keyword">from</span> <span class="string">&quot;qiankun&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">setGlobalState</span>(&#123; <span class="attr">user</span>: &#123; <span class="attr">name</span>: <span class="string">&quot;lang&quot;</span>, <span class="attr">age</span>: <span class="number">18</span> &#125; &#125;);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在主应用中将共享状态传递给子应用：</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; start &#125; <span class="keyword">from</span> <span class="string">&quot;qiankun&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = <span class="title function_">start</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&quot;vue3&quot;</span>,</span><br><span class="line">  <span class="attr">entry</span>: <span class="string">&quot;//localhost:8081&quot;</span>,</span><br><span class="line">  <span class="attr">container</span>: <span class="string">&quot;#vue3&quot;</span>,</span><br><span class="line">  <span class="attr">activeRule</span>: <span class="string">&quot;/vue3&quot;</span>,</span><br><span class="line">  <span class="attr">props</span>: &#123;</span><br><span class="line">    <span class="attr">shared</span>: &#123;</span><br><span class="line">      <span class="attr">getGlobalState</span>: <span class="function">() =&gt;</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(globalState),</span><br><span class="line">      <span class="attr">setGlobalState</span>: <span class="function">(<span class="params">state</span>) =&gt;</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="title function_">setGlobalState</span>(state)),</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在子应用中使用共享状态：</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; initGlobalState &#125; <span class="keyword">from</span> <span class="string">&quot;qiankun&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> actions = <span class="title function_">initGlobalState</span>(&#123; <span class="attr">user</span>: &#123; <span class="attr">name</span>: <span class="string">&quot;lang1&quot;</span>, <span class="attr">age</span>: <span class="number">19</span> &#125; &#125;);</span><br><span class="line"></span><br><span class="line">actions.<span class="title function_">onGlobalStateChange</span>(<span class="function">(<span class="params">newState, prevousState</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;newState:&quot;</span>, newState);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;prevousState:&quot;</span>, prevousState);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">actions.<span class="title function_">setGlobalState</span>(&#123; <span class="attr">user</span>: &#123; <span class="attr">name</span>: <span class="string">&quot;lang2&quot;</span>, <span class="attr">age</span>: <span class="number">20</span> &#125; &#125;);</span><br></pre></td></tr></table></figure>
+<p>上面，主应用通过 <code>props</code> 将 <code>getGlobalState</code> 和 <code>setGlobalState</code> 传递给了子应用。子应用可以通过 <code>initGlobalState</code> 方法来初始化全局状态，并且可以监听全局状态的变化。在子应用中，如果需要修改全局状态，可以通过 <code>setGlobalState</code> 方法来实现。</p>
+<h3 id="2-7-子应用如何调用其他子应用组件"><a href="#2-7-子应用如何调用其他子应用组件" class="headerlink" title="2.7 子应用如何调用其他子应用组件"></a>2.7 子应用如何调用其他子应用组件</h3><h4 id="Vue-子应用中调用-React-子应用的组件"><a href="#Vue-子应用中调用-React-子应用的组件" class="headerlink" title="Vue 子应用中调用 React 子应用的组件"></a>Vue 子应用中调用 React 子应用的组件</h4><p>可以先在主应用中通过 <code>registerMicroApps</code> 方法注册好所有的子应用，并在主应用中管理子应用之间的通信。然后，可以在需要使用其他子应用组件的子应用中通过 <code>loadMicroApp</code> 方法异步加载对应的子应用并获取到对应子应用的实例，从而使用其提供的组件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; loadMicroApp &#125; <span class="keyword">from</span> <span class="string">&quot;qiankun&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">loadReactApp</span> = (<span class="params"></span>) =&gt;</span><br><span class="line">  <span class="title function_">loadMicroApp</span>(&#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&quot;reactApp&quot;</span>,</span><br><span class="line">    <span class="attr">entry</span>: <span class="string">&quot;//localhost:8082&quot;</span>,</span><br><span class="line">    <span class="attr">container</span>: <span class="string">&quot;#react&quot;</span>,</span><br><span class="line">    <span class="attr">activeRule</span>: <span class="string">&quot;/react&quot;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">VueApp</span> = &#123;</span><br><span class="line">  <span class="attr">template</span>: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;div&gt;</span></span><br><span class="line"><span class="string">      &lt;h1&gt;VueApp&lt;/h1&gt;</span></span><br><span class="line"><span class="string">      &lt;react-component /&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">  `</span>,</span><br><span class="line">  <span class="title function_">mounted</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">loadReactApp</span>().<span class="title function_">then</span>(<span class="function">(<span class="params">app</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> <span class="title class_">ReactComponent</span> = app.<span class="title function_">getComponent</span>(<span class="string">&quot;ReactComponent&quot;</span>);</span><br><span class="line">      <span class="title class_">Vue</span>.<span class="title function_">component</span>(<span class="string">&quot;react-component&quot;</span>, &#123;</span><br><span class="line">        <span class="attr">template</span>: <span class="string">`&lt;div&gt;&lt;ReactComponent /&gt;&lt;/div&gt;`</span>,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在 <code>VueApp</code> 的 <code>mounted</code> 生命周期中异步加载了 <code>ReactApp</code> 并获取到其实例，然后通过 <code>getComponent</code> 方法获取到了 <code>ReactApp</code> 中提供的 <code>ReactComponent</code> 组件，并将其转换为 Vue 组件供 <code>VueApp</code> 使用。</p>
+</blockquote>
+<h4 id="React-子应用中调用-Vue-子应用的组件"><a href="#React-子应用中调用-Vue-子应用的组件" class="headerlink" title="React 子应用中调用 Vue 子应用的组件"></a>React 子应用中调用 Vue 子应用的组件</h4><blockquote>
+<p>React 子应用中，加载 Vue 子应用并获取其组件：</p>
+</blockquote>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; loadMicroApp, getGlobalState &#125; <span class="keyword">from</span> <span class="string">&#x27;qiankun&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> \[vueComponent, setVueComponent\] = <span class="title function_">useState</span>(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> vueApp = <span class="title function_">loadMicroApp</span>(&#123;</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;vue3&#x27;</span>,</span><br><span class="line">      <span class="attr">entry</span>: <span class="string">&#x27;//localhost:8081&#x27;</span>,</span><br><span class="line">      <span class="attr">container</span>: <span class="string">&#x27;#vue3&#x27;</span>,</span><br><span class="line">      <span class="attr">activeRule</span>: <span class="string">&#x27;/vue3&#x27;</span>,</span><br><span class="line">      <span class="attr">props</span>: &#123; <span class="attr">name</span>: <span class="string">&#x27;vue-app&#x27;</span> &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    vueApp.<span class="title function_">onGlobalStateChange</span>(<span class="function">(<span class="params">state, prev</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;\[React\] Vue global state changed: &#x27;</span>, state);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    vueApp</span><br><span class="line">      .<span class="property">loadPromise</span>.<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> vueInstance = vueApp.<span class="title function_">bootstrap</span>();</span><br><span class="line">        <span class="title function_">setVueComponent</span>(vueInstance.<span class="property">$children</span>\[<span class="number">0</span>\]);</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="function">() =&gt;</span> vueApp.<span class="title function_">unmount</span>();</span><br><span class="line">  &#125;, \[\]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>React App<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">hr</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Vue App Component:<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;vueComponent &amp;&amp; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;vueComponent.message&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> vueComponent.handleClick()&#125;&gt;Click me!<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      )&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>当然得在 Vue 子应用中，暴露一个组件，上面的<code>vueInstance.$children\[0\]</code>就是这个组件：</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;p&gt;&#123;&#123; message &#125;&#125;&lt;/p&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      message: &quot;Hello from Vue!&quot;,</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    handleClick() &#123;</span><br><span class="line">      console.log(&quot;Vue button clicked!&quot;);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h4><blockquote>
+<p>在调用其他子应用的组件时，可以使用 <code>props</code> 传递参数，和在普通的 React 组件中传递 <code>props</code> 是类似的。具体来说，在调用时，可以将需要传递的参数放在 <code>props</code> 对象中，然后作为第二个参数传递给 <code>render</code> 方法，例如：</p>
+</blockquote>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; render, hydrate &#125; <span class="keyword">from</span> <span class="string">&#x27;react-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; registerMicroApps, start &#125; <span class="keyword">from</span> <span class="string">&#x27;qiankun&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">registerMicroApps</span>(\[...\]);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">start</span>();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;/\* 调用 Vue 子应用的组件 */&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;render(&#x27;vue3&#x27;, &#123; name: &#x27;Tom&#x27; &#125;, &#123; container: &#x27;#vue-container&#x27; &#125;)&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">hydrate</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">App</span> /&gt;</span></span>, <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>));</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>我们向 Vue 子应用的组件中传递了一个名为 <code>name</code> 的参数，并且将其渲染到了 <code>#vue-container</code> 容器中。在 Vue 子应用中，可以通过 <code>props</code> 对象获取这个参数，例如：</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;h2&gt;Vue Component&lt;/h2&gt;</span><br><span class="line">    &lt;p&gt;Hello, &#123;&#123; name &#125;&#125;!&lt;/p&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">  name: &quot;VueComponent&quot;,</span><br><span class="line">  props: &#123;</span><br><span class="line">    name: &#123;</span><br><span class="line">      type: String,</span><br><span class="line">      required: true,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>这样，在 Vue 子应用中就可以通过 <code>this.$props.name</code> 访问这个参数了</p>
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><p>由于 Vue 和 React 使用了不同的渲染引擎，它们之间的组件并不完全兼容。我这个也是自己想尝试一下不同的语言他们互相调用，所以大家在实际开发中需要根据具体情况来选择使用哪种方式来实现组件之间的互相调用。一般的话还是 vue 调用 vue, react 调用 react 兼容比较好。</p>
+<p>上面就是就是小浪介绍的一个简单的 <code>qiankun</code> 实例 demo，包括主应用使用 <code>React</code>，子应用 1 使用 <code>Vue 3</code>，子应用 2 使用 <code>React</code> 。</p>
+<h2 id="3-我开发中遇到的坑点"><a href="#3-我开发中遇到的坑点" class="headerlink" title="3.我开发中遇到的坑点"></a>3.我开发中遇到的坑点</h2><blockquote>
+<p>在平时的开发肯定也不是一帆风顺的，也会多多少少遇到一些问题，下面是我平时遇到的一些问题，也查阅一些解决措施，这里就不一一详细把解决措施写出来，哈哈哈，写不完。</p>
+</blockquote>
+<h3 id="3-1-路由问题："><a href="#3-1-路由问题：" class="headerlink" title="3.1 路由问题："></a>3.1 路由问题：</h3><p>由于主应用和子应用都需要进行路由处理，需要注意路由的定义、匹配和传递，确保各个子应用之间的路由能够正确地被处理。</p>
+<p>措施：统一路由管理：尽量采用相同的路由管理方式，确保路由的定义和匹配方式相同，方便进行传递和处理。</p>
+<h3 id="3-2-样式隔离问题："><a href="#3-2-样式隔离问题：" class="headerlink" title="3.2 样式隔离问题："></a>3.2 样式隔离问题：</h3><p>由于不同的子应用之间可能会有样式冲突的问题，需要考虑如何进行样式隔离，以确保各个子应用之间的样式不会互相干扰。</p>
+<p>措施：可以采用 CSS Modules、BEM 等方式进行样式隔离，或者使用 Shadow DOM 等技术进行样式隔离。在公司里后面全部改用 CSS Modules。</p>
+<h3 id="3-3-全局状态管理问题："><a href="#3-3-全局状态管理问题：" class="headerlink" title="3.3 全局状态管理问题："></a>3.3 全局状态管理问题：</h3><p>由于各个子应用之间需要共享一些全局状态，需要考虑如何进行全局状态管理，以便于各个子应用之间能够共享数据。</p>
+<p>措施：可以采用 Redux、Mobx 等全局状态管理库进行状态管理，或者使用 qiankun 提供的 props、emit 等方式进行状态传递。</p>
+<h3 id="3-4-生命周期问题："><a href="#3-4-生命周期问题：" class="headerlink" title="3.4 生命周期问题："></a>3.4 生命周期问题：</h3><p>由于 qiankun 微前端框架会对主应用和子应用进行生命周期管理，因此需要注意各个组件的生命周期方法的调用时机和顺序。</p>
+<p>措施：可以在各个生命周期方法中进行必要的处理，或者使用 qiankun 提供的 emitLifeCycles 等方式进行生命周期管理。</p>
+<h3 id="3-5-缓存问题："><a href="#3-5-缓存问题：" class="headerlink" title="3.5 缓存问题："></a>3.5 缓存问题：</h3><p>由于 qiankun 微前端框架会对各个子应用进行缓存，需要注意缓存的清理和更新，以确保各个子应用之间的数据能够及时地同步更新</p>
+<p>措施：可以使用 qiankun 提供的 prefetch、sandbox 等方式进行缓存管理，或者手动清理和更新缓存。</p>
+<h3 id="3-6-避免重复引入公共依赖："><a href="#3-6-避免重复引入公共依赖：" class="headerlink" title="3.6 避免重复引入公共依赖："></a>3.6 避免重复引入公共依赖：</h3><blockquote>
+<p>在多个子应用之间共享组件时，应该避免重复引入公共依赖。一种解决方法是将公共依赖打包为一个单独的库，并将其发布到 npm 上，然后在子应用中通过 npm 依赖引入。另一种解决方法是将公共依赖打包为 umd 格式，并在<code>qiankun</code>的<code>global</code>对象上注册，使得其他子应用可以通过<code>global</code>对象来访问公共依赖。例如：</p>
+</blockquote>
+<p>在主应用中注册公共依赖：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ReactDOM</span> <span class="keyword">from</span> <span class="string">&quot;react-dom&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">MyComponent</span> <span class="keyword">from</span> <span class="string">&quot;my-component&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">window</span>.<span class="property">MyComponent</span> = <span class="title class_">MyComponent</span>;</span><br></pre></td></tr></table></figure>
+<p>在子应用中使用公共依赖：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ReactDOM</span> <span class="keyword">from</span> <span class="string">&quot;react-dom&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; useEffect &#125; <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="title class_">MyComponent</span> &#125; = <span class="variable language_">window</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="3-7-确保应用能够正确注册"><a href="#3-7-确保应用能够正确注册" class="headerlink" title="3.7 确保应用能够正确注册"></a>3.7 确保应用能够正确注册</h3><p>这可能是我自己会遇到的问题，有时候因为自己拼错单词，导致没有注册成功…..应用注册是一个关键步骤，需要确保主应用和子应用都能够正确地注册到<code>qiankun</code>微前端框架中。在主应用中，应该正确地调用<code>registerMicroApps</code>函数，并确保子应用的<code>entry</code>和<code>container</code>属性都被正确地设置。在子应用中，应该正确地调用<code>start</code>函数，并确保子应用的<code>mount</code>函数能够正确地渲染子应用。</p>
+<h2 id="4-结语："><a href="#4-结语：" class="headerlink" title="4.结语："></a>4.结语：</h2><p>​ 有的时候查找微前端相关的问题的时候，下面总有言论，不看好微前端</p>
+<p>​ 确实，微前端需要解决许多复杂的问题，例如应用程序的拆分、应用程序之间的通信和数据共享等。这会增加开发和维护的复杂性，可能需要额外的学习成本和工具支持。微前端应用程序可能需要通过网络加载许多小块代码，这可能会影响应用程序的性能和用户体验。此外，微前端还需要在运行时处理一些额外的逻辑，例如路由和状态管理，微前端应用程序可能需要跨域通信和数据共享，这可能会引入一些安全风险。此外，微前端还需要确保应用程序的隔离和沙箱，以防止应用程序之间的影响和攻击。技术选型：微前端需要处理不同的技术栈和框架之间的兼容性和交互性。这可能需要额外的工作。等等问题。</p>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><blockquote>
+<p>​ 虽然微前端存在一些挑战和限制，但随着技术的发展和社区的支持，这些问题将得到解决，微前端也将成为构建大型前端应用程序的一种有力选择。总之，qiankun 是一个非常优秀的微前端解决方案，它可以帮助我们更好地管理和维护前端应用程序，提高应用程序的可扩展性和可维护性。同时，qiankun 也是一个非常灵活和可扩展的框架，可以适用于各种前端应用程序的开发场景。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/xiaolangwiki/tags/%E5%BE%AE%E5%89%8D%E7%AB%AF/" rel="tag"># 微前端</a>
+              <a href="/xiaolangwiki/tags/qiankun/" rel="tag"># qiankun</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/xiaolangwiki/2022/09/21/read-2022-09-21/" rel="prev" title="从"登录"到"人生":一个准程序员的"以终为始"领悟">
+      <i class="fa fa-chevron-left"></i> 从"登录"到"人生":一个准程序员的"以终为始"领悟
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/xiaolangwiki/2024/07/23/GitHub%E6%90%9C%E7%B4%A2%E6%8A%80%E5%B7%A7%EF%BC%9A%E5%BF%AB%E9%80%9F%E6%89%BE%E5%88%B0%E4%BD%A0%E6%83%B3%E8%A6%81%E7%9A%84%E4%BB%A3%E7%A0%81/" rel="next" title="GitHub搜索技巧：快速找到你想要的代码">
+      GitHub搜索技巧：快速找到你想要的代码 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%EF%BC%8C%E4%B8%80%E6%AD%A5%E6%AD%A5%E5%AD%A6%E4%B9%A0%E5%BE%AE%E5%89%8D%E7%AB%AF"><span class="nav-number">1.</span> <span class="nav-text">从零开始，一步步学习微前端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%8B%E7%BB%8D"><span class="nav-number">3.</span> <span class="nav-text">1.介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%BE%AE%E5%89%8D%E7%AB%AF"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 为什么需要微前端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E8%87%AA%E5%B7%B1%E7%9A%84%E9%A1%B9%E7%9B%AE%E9%9C%80%E8%A6%81%E4%BD%BF%E7%94%A8%E5%BE%AE%E5%89%8D%E7%AB%AF"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 如何判断自己的项目需要使用微前端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E4%B8%BB%E5%BA%94%E7%94%A8%E5%92%8C%E5%AD%90%E5%BA%94%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">1.3 主应用和子应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-qiankun-%E7%9A%84%E7%89%B9%E7%82%B9"><span class="nav-number">3.4.</span> <span class="nav-text">1.4 qiankun 的特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%BE%AE%E5%89%8D%E7%AB%AF"><span class="nav-number">3.5.</span> <span class="nav-text">1.5 如何使用微前端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BD%BF%E7%94%A8qiankun%E6%90%AD%E5%BB%BA%E4%BE%8B%E5%AD%90%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">2.使用qiankun搭建例子：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%88%9B%E5%BB%BA%E4%B8%BB%E5%BA%94%E7%94%A8"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 创建主应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%88%9B%E5%BB%BA%E5%AD%90%E5%BA%94%E7%94%A8-1%EF%BC%9AVue-3"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 创建子应用 1：Vue 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%88%9B%E5%BB%BA%E5%AD%90%E5%BA%94%E7%94%A8-2%EF%BC%9AReact-%E5%BA%94%E7%94%A8"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 创建子应用 2：React 应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%90%AF%E5%8A%A8%E5%BA%94%E7%94%A8"><span class="nav-number">4.4.</span> <span class="nav-text">2.4 启动应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%90%E5%BA%94%E7%94%A8%E4%B8%AD%E9%9C%80%E8%A6%81%E5%BC%95%E5%85%A5-qiankun%EF%BC%9A"><span class="nav-number">4.4.1.</span> <span class="nav-text">子应用中需要引入 qiankun：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86"><span class="nav-number">4.5.</span> <span class="nav-text">2.5 全局状态管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-%E5%AD%90%E5%BA%94%E7%94%A8%E4%B9%8B%E9%97%B4%E5%85%B1%E4%BA%AB%E7%8A%B6%E6%80%81"><span class="nav-number">4.6.</span> <span class="nav-text">2.6 子应用之间共享状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-%E5%AD%90%E5%BA%94%E7%94%A8%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8%E5%85%B6%E4%BB%96%E5%AD%90%E5%BA%94%E7%94%A8%E7%BB%84%E4%BB%B6"><span class="nav-number">4.7.</span> <span class="nav-text">2.7 子应用如何调用其他子应用组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Vue-%E5%AD%90%E5%BA%94%E7%94%A8%E4%B8%AD%E8%B0%83%E7%94%A8-React-%E5%AD%90%E5%BA%94%E7%94%A8%E7%9A%84%E7%BB%84%E4%BB%B6"><span class="nav-number">4.7.1.</span> <span class="nav-text">Vue 子应用中调用 React 子应用的组件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#React-%E5%AD%90%E5%BA%94%E7%94%A8%E4%B8%AD%E8%B0%83%E7%94%A8-Vue-%E5%AD%90%E5%BA%94%E7%94%A8%E7%9A%84%E7%BB%84%E4%BB%B6"><span class="nav-number">4.7.2.</span> <span class="nav-text">React 子应用中调用 Vue 子应用的组件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E9%80%92%E5%8F%82%E6%95%B0"><span class="nav-number">4.7.3.</span> <span class="nav-text">传递参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%EF%BC%9A"><span class="nav-number">4.7.4.</span> <span class="nav-text">注意：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%88%91%E5%BC%80%E5%8F%91%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91%E7%82%B9"><span class="nav-number">5.</span> <span class="nav-text">3.我开发中遇到的坑点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E8%B7%AF%E7%94%B1%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 路由问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%A0%B7%E5%BC%8F%E9%9A%94%E7%A6%BB%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">5.2.</span> <span class="nav-text">3.2 样式隔离问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E5%85%A8%E5%B1%80%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">5.3.</span> <span class="nav-text">3.3 全局状态管理问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">5.4.</span> <span class="nav-text">3.4 生命周期问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">5.5.</span> <span class="nav-text">3.5 缓存问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-%E9%81%BF%E5%85%8D%E9%87%8D%E5%A4%8D%E5%BC%95%E5%85%A5%E5%85%AC%E5%85%B1%E4%BE%9D%E8%B5%96%EF%BC%9A"><span class="nav-number">5.6.</span> <span class="nav-text">3.6 避免重复引入公共依赖：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-%E7%A1%AE%E4%BF%9D%E5%BA%94%E7%94%A8%E8%83%BD%E5%A4%9F%E6%AD%A3%E7%A1%AE%E6%B3%A8%E5%86%8C"><span class="nav-number">5.7.</span> <span class="nav-text">3.7 确保应用能够正确注册</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%BB%93%E8%AF%AD%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">4.结语：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="nav-number">6.1.</span> <span class="nav-text">总结：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小浪wiki"
+      src="/xiaolangwiki/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小浪wiki</p>
+  <div class="site-description" itemprop="description">一个关于编程、计算机、软件工程、互联网的知识库。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/xiaolangwiki/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/xiaolangwiki/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/xiaolangwiki/tags/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小浪wiki</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/xiaolangwiki/lib/anime.min.js"></script>
+  <script src="/xiaolangwiki/lib/pjax/pjax.min.js"></script>
+  <script src="/xiaolangwiki/lib/velocity/velocity.min.js"></script>
+  <script src="/xiaolangwiki/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/xiaolangwiki/js/utils.js"></script>
+
+<script src="/xiaolangwiki/js/motion.js"></script>
+
+
+<script src="/xiaolangwiki/js/schemes/muse.js"></script>
+
+
+<script src="/xiaolangwiki/js/next-boot.js"></script>
+
+<script src="/xiaolangwiki/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/xiaolangwiki/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23li7GiIl6VGhHOLU4',
+      clientSecret: '0a694770a2c52ecc5d07b4982fd9e46c78009ed3',
+      repo        : 'https://github.com/LianTianNo1/xiaolangwiki',
+      owner       : 'LianTianNo1',
+      admin       : ['LianTianNo1'],
+      id          : 'dedd39d7da1cc96e5b3c55ac1082d9a3',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>
