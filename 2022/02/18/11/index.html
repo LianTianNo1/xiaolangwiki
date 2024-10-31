@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/xiaolangwiki/images/favicon64.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/xiaolangwiki/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/xiaolangwiki/images/favicon16.ico">
+  <link rel="mask-icon" href="/xiaolangwiki/images/favicon48.ico" color="#222">
+
+<link rel="stylesheet" href="/xiaolangwiki/css/main.css">
+
+
+<link rel="stylesheet" href="/xiaolangwiki/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"liantianno1.github.io","root":"/xiaolangwiki/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","enable":true,"active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="程序员效率大挑战：别让”偶然复杂度”坑了你！嘿，大家好！我是一名22岁的大三计算机系学生，最近读到了一篇超级有意思的文章，讲的是程序员工作效率的问题。说实话，这篇文章真的让我有点震惊，也让我对未来的程序员生涯有了新的认识。我想跟大家分享一下我的想法，希望能给同样即将踏入IT圈的小伙伴们一些启发。 首先，这篇文章提到了一个叫”偶然复杂度”的概念。说白了，就是我们程序员经常忙得要死要活，结果解决的问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序员效率大挑战：别让&quot;偶然复杂度&quot;坑了你！">
+<meta property="og:url" content="https://liantianno1.github.io/xiaolangwiki/2022/02/18/11/index.html">
+<meta property="og:site_name" content="小浪wiki">
+<meta property="og:description" content="程序员效率大挑战：别让”偶然复杂度”坑了你！嘿，大家好！我是一名22岁的大三计算机系学生，最近读到了一篇超级有意思的文章，讲的是程序员工作效率的问题。说实话，这篇文章真的让我有点震惊，也让我对未来的程序员生涯有了新的认识。我想跟大家分享一下我的想法，希望能给同样即将踏入IT圈的小伙伴们一些启发。 首先，这篇文章提到了一个叫”偶然复杂度”的概念。说白了，就是我们程序员经常忙得要死要活，结果解决的问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-17T22:12:11.000Z">
+<meta property="article:modified_time" content="2022-02-17T22:12:11.000Z">
+<meta property="article:author" content="小浪wiki">
+<meta property="article:tag" content="读书">
+<meta property="article:tag" content="效率">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://liantianno1.github.io/xiaolangwiki/2022/02/18/11/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/xiaolangwiki/js/love.js"></script>
+<!-- 文章加密 -->
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+  <title>程序员效率大挑战：别让"偶然复杂度"坑了你！ | 小浪wiki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <meta name="referrer" content="no-referrer"/>
+<link rel="alternate" href="/xiaolangwiki/atom.xml" title="小浪wiki" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/xiaolangwiki/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浪wiki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一个关于编程、计算机、软件工程、互联网</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/xiaolangwiki/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/xiaolangwiki/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/xiaolangwiki/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/xiaolangwiki/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/LianTianNo1" class="github-corner" title="LianTianNo1&#96; GitHub" aria-label="LianTianNo1&#96; GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liantianno1.github.io/xiaolangwiki/2022/02/18/11/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/xiaolangwiki/images/avatar.png">
+      <meta itemprop="name" content="小浪wiki">
+      <meta itemprop="description" content="一个关于编程、计算机、软件工程、互联网的知识库。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浪wiki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          程序员效率大挑战：别让"偶然复杂度"坑了你！
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-18 06:12:11" itemprop="dateCreated datePublished" datetime="2022-02-18T06:12:11+08:00">2022-02-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/xiaolangwiki/categories/%E6%80%9D%E8%80%83/" itemprop="url" rel="index"><span itemprop="name">思考</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="程序员效率大挑战：别让”偶然复杂度”坑了你！"><a href="#程序员效率大挑战：别让”偶然复杂度”坑了你！" class="headerlink" title="程序员效率大挑战：别让”偶然复杂度”坑了你！"></a>程序员效率大挑战：别让”偶然复杂度”坑了你！</h1><p>嘿，大家好！我是一名22岁的大三计算机系学生，最近读到了一篇超级有意思的文章，讲的是程序员工作效率的问题。说实话，这篇文章真的让我有点震惊，也让我对未来的程序员生涯有了新的认识。我想跟大家分享一下我的想法，希望能给同样即将踏入IT圈的小伙伴们一些启发。</p>
+<p>首先，这篇文章提到了一个叫”偶然复杂度”的概念。说白了，就是我们程序员经常忙得要死要活，结果解决的问题根本不是程序本身的问题，而是因为选错了工具或方法导致的额外麻烦。我当时就想，我靠，这不就是在搬起石头砸自己的脚吗？</p>
+<p>想想看，我们每天加班加点，以为自己在攻克什么技术难关，结果可能只是在解决自己制造的问题。这就好比你本来要做一道简单的炒饭，结果非要用高压锅，搞得自己手忙脚乱，最后还把厨房炸了（别笑，我室友就干过这种事）。</p>
+<p>文章里还说，业界其实有很多提高效率的最佳实践，但问题是这些实践之间没什么明显联系，搞得人很难全面掌握。我听了直呼太真实了！想想我们上课学的那些编程范式、设计模式、敏捷开发…老师讲的时候头头是道，到了实际项目里，我就傻眼了，根本不知道该怎么用。</p>
+<p>不过，这篇文章的作者也不是光吐槽，人家给出了四个超实用的原则：以终为始、任务分解、沟通反馈、自动化。乍一看，这四个原则简单得像是小学生都懂的道理。但仔细想想，在实际工作中做到这些，还真不容易。</p>
+<p>拿”以终为始”来说吧。我在做课程项目的时候，经常是看到题目就开始狂敲代码，结果写到一半发现理解错题目意思，白忙活一场。如果一开始就花点时间想清楚最终要达到什么效果，再倒推着设计每一步，肯定能少走不少弯路。</p>
+<p>“任务分解”这个我倒是有点体会。我大一刚入学的时候，就被老师教导过，要把一个大项目分解成多个小任务，然后每个人负责一个任务。结果我当时就被教导得头头是道，觉得这可真是一件很有意思的事情。后来我参加过一个学校项目，光是看项目描述就觉得头大。但是项目负责人特别厉害，把整个项目分解成一个个小任务，分配给不同班级的学生。结果我们这群素未谋面的人，愣是合作得挺顺畅。</p>
+<p>至于”沟通反馈”和”自动化”，老实说，在学校里接触得不多。但我暑假实习的时候，可算是见识到了它们的威力。经常沟通真的能避免很多不必要的返工，而自动化测试和部署，简直是懒人福音啊！要是早点学会这些，指不定我的期末项目能少掉几根头发呢。</p>
+<p>不过，文章里也说了，这些原则看着简单，做起来可不容易。比如说，在项目一开始就花大力气做规划和自动化，总觉得是在浪费时间。但是经历过几次”补漏洞”的痛苦之后，我才明白，早做准备真的能省下后面的不少事。</p>
+<p>作为一个马上就要进入职场的准程序员，这篇文章给了我一记当头棒喝。它让我意识到，成为一个牛逼的程序员，不只是要会写代码，更重要的是要学会高效工作。我们得学会避开那些自己给自己设的坑，把精力花在真正有价值的问题上。</p>
+<p>所以，咱们以后写代码的时候，可得擦亮眼睛啊！别让那个什么”偶然复杂度”把咱们坑了。让我们一起努力，用聪明的方式工作，创造出真正牛逼的软件，改变这个世界！</p>
+<p>好了，我的碎碎念就到这里。</p>
+
+    </div>
+
+    
+    
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>再接再厉-------------</div>
+    
+</div>
+
+
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/xiaolangwiki/tags/%E8%AF%BB%E4%B9%A6/" rel="tag"><i class="fa fa-tag"></i> 读书</a>
+              <a href="/xiaolangwiki/tags/%E6%95%88%E7%8E%87/" rel="tag"><i class="fa fa-tag"></i> 效率</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/xiaolangwiki/2022/02/16/14/" rel="prev" title="React 无缝滚动跑马灯组件">
+      <i class="fa fa-chevron-left"></i> React 无缝滚动跑马灯组件
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/xiaolangwiki/2022/05/22/26/" rel="next" title="手把手教你在Webpack写一个Loader">
+      手把手教你在Webpack写一个Loader <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%91%98%E6%95%88%E7%8E%87%E5%A4%A7%E6%8C%91%E6%88%98%EF%BC%9A%E5%88%AB%E8%AE%A9%E2%80%9D%E5%81%B6%E7%84%B6%E5%A4%8D%E6%9D%82%E5%BA%A6%E2%80%9D%E5%9D%91%E4%BA%86%E4%BD%A0%EF%BC%81"><span class="nav-number">1.</span> <span class="nav-text">程序员效率大挑战：别让”偶然复杂度”坑了你！</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小浪wiki"
+      src="/xiaolangwiki/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小浪wiki</p>
+  <div class="site-description" itemprop="description">一个关于编程、计算机、软件工程、互联网的知识库。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/xiaolangwiki/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/xiaolangwiki/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/xiaolangwiki/tags/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LianTianNo1" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;LianTianNo1" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小浪wiki</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div><div>
+<!--添加网站运行时间-->
+<span>小破站已经在风雨中度过了</span>
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    function createtime() {
+        const startTime = '09/27/2018 00:12:55',
+            start = new Date(startTime)
+        let mill = new Date() - start,
+            seconds = Math.floor(mill / 1000),
+            mins = Math.floor(seconds / 60),
+            hours = Math.floor(mins / 60),
+            days = Math.floor(hours / 24)
+        const time = {
+            seconds: seconds - mins * 60,
+            mins: mins - hours * 60,
+            hours: hours - days * 24,
+        }
+        for (const k in time) {
+            time[k] = `${time[k]}`.padStart(2, '0')
+        }
+        document.getElementById("timeDate").innerHTML = ` ${days} 天`
+        document.getElementById("times").innerHTML = ` ${time.hours} 小时 ${time.mins} 分 ${time.seconds} 秒`
+    }
+    setInterval(createtime, 500)
+</script>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/xiaolangwiki/lib/anime.min.js"></script>
+  <script src="/xiaolangwiki/lib/pjax/pjax.min.js"></script>
+  <script src="/xiaolangwiki/lib/velocity/velocity.min.js"></script>
+  <script src="/xiaolangwiki/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/xiaolangwiki/js/utils.js"></script>
+
+<script src="/xiaolangwiki/js/motion.js"></script>
+
+
+<script src="/xiaolangwiki/js/schemes/muse.js"></script>
+
+
+<script src="/xiaolangwiki/js/next-boot.js"></script>
+
+<script src="/xiaolangwiki/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/xiaolangwiki/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23li7GiIl6VGhHOLU4',
+      clientSecret: '0a694770a2c52ecc5d07b4982fd9e46c78009ed3',
+      repo        : 'https://github.com/LianTianNo1/xiaolangwiki',
+      owner       : 'LianTianNo1',
+      admin       : ['LianTianNo1'],
+      id          : 'af9e42c54049664e8be400239ddb09b7',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>

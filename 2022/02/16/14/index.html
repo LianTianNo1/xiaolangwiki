@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/xiaolangwiki/images/favicon64.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/xiaolangwiki/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/xiaolangwiki/images/favicon16.ico">
+  <link rel="mask-icon" href="/xiaolangwiki/images/favicon48.ico" color="#222">
+
+<link rel="stylesheet" href="/xiaolangwiki/css/main.css">
+
+
+<link rel="stylesheet" href="/xiaolangwiki/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"liantianno1.github.io","root":"/xiaolangwiki/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","enable":true,"active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="React 无缝滚动跑马灯组件最近在做一个电商平台的项目，其中一个需求是在首页顶部展示一些重要的通知公告，比如物流赔付信息、促销活动预告等。为了吸引用户的注意力，UI决定采用跑马灯的形式来展示这些信息，并且要实现无缝滚动，避免出现停顿或跳跃的视觉效果。 由于公司老项目限制，我们没有采用现成的轮播图组件，于是决定自己动手开发一个 React 无缝滚动跑马灯组件。 需求分析我们的跑马灯组件需要满足以下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React 无缝滚动跑马灯组件">
+<meta property="og:url" content="https://liantianno1.github.io/xiaolangwiki/2022/02/16/14/index.html">
+<meta property="og:site_name" content="小浪wiki">
+<meta property="og:description" content="React 无缝滚动跑马灯组件最近在做一个电商平台的项目，其中一个需求是在首页顶部展示一些重要的通知公告，比如物流赔付信息、促销活动预告等。为了吸引用户的注意力，UI决定采用跑马灯的形式来展示这些信息，并且要实现无缝滚动，避免出现停顿或跳跃的视觉效果。 由于公司老项目限制，我们没有采用现成的轮播图组件，于是决定自己动手开发一个 React 无缝滚动跑马灯组件。 需求分析我们的跑马灯组件需要满足以下">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-16T02:16:14.000Z">
+<meta property="article:modified_time" content="2022-02-16T02:16:14.000Z">
+<meta property="article:author" content="小浪wiki">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="跑马灯">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://liantianno1.github.io/xiaolangwiki/2022/02/16/14/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/xiaolangwiki/js/love.js"></script>
+<!-- 文章加密 -->
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+  <title>React 无缝滚动跑马灯组件 | 小浪wiki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <meta name="referrer" content="no-referrer"/>
+<link rel="alternate" href="/xiaolangwiki/atom.xml" title="小浪wiki" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/xiaolangwiki/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小浪wiki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一个关于编程、计算机、软件工程、互联网</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/xiaolangwiki/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/xiaolangwiki/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/xiaolangwiki/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/xiaolangwiki/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/LianTianNo1" class="github-corner" title="LianTianNo1&#96; GitHub" aria-label="LianTianNo1&#96; GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://liantianno1.github.io/xiaolangwiki/2022/02/16/14/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/xiaolangwiki/images/avatar.png">
+      <meta itemprop="name" content="小浪wiki">
+      <meta itemprop="description" content="一个关于编程、计算机、软件工程、互联网的知识库。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小浪wiki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React 无缝滚动跑马灯组件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-16 10:16:14" itemprop="dateCreated datePublished" datetime="2022-02-16T10:16:14+08:00">2022-02-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/xiaolangwiki/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="React-无缝滚动跑马灯组件"><a href="#React-无缝滚动跑马灯组件" class="headerlink" title="React 无缝滚动跑马灯组件"></a>React 无缝滚动跑马灯组件</h2><p>最近在做一个电商平台的项目，其中一个需求是在首页顶部展示一些重要的通知公告，比如物流赔付信息、促销活动预告等。为了吸引用户的注意力，UI决定采用跑马灯的形式来展示这些信息，并且要实现无缝滚动，避免出现停顿或跳跃的视觉效果。</p>
+<p>由于公司老项目限制，我们没有采用现成的轮播图组件，于是决定自己动手开发一个 React 无缝滚动跑马灯组件。</p>
+<h3 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h3><p>我们的跑马灯组件需要满足以下几个需求：</p>
+<ol>
+<li><strong>无缝滚动</strong>: 文案滚动流畅，首尾衔接自然，没有明显的停顿或跳跃。</li>
+<li><strong>可配置</strong>: 可以自定义滚动速度、文案内容、字体颜色等样式。</li>
+<li><strong>易用</strong>: 使用简单，只需要传入文案数组即可。</li>
+</ol>
+<h3 id="组件设计与实现"><a href="#组件设计与实现" class="headerlink" title="组件设计与实现"></a>组件设计与实现</h3><h4 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h4><p>实现无缝滚动的关键在于复制第一条文案到最后一条，形成一个循环。当滚动到最后一条文案时，瞬间回到第一条文案，由于视觉上第一条文案已经在最后一条文案后面，所以看起来像是继续滚动，从而达到无缝衔接的效果。</p>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><p>首先，我们定义了组件的 Props 和 State：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">SeamlessMarqueeProps</span> &#123;</span><br><span class="line">    <span class="attr">texts</span>: <span class="built_in">string</span>[]; <span class="comment">// 轮播文案</span></span><br><span class="line">    interval?: <span class="built_in">number</span>; <span class="comment">// 轮播间隔，单位毫秒，默认1000毫秒（每秒滚动一组文案）</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">SeamlessMarqueeState</span> &#123;</span><br><span class="line">    <span class="attr">translateY</span>: <span class="built_in">number</span>; <span class="comment">// 滚动距离</span></span><br><span class="line">    <span class="attr">currentTextIndex</span>: <span class="built_in">number</span>; <span class="comment">// 当前显示的文案索引</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后，在组件的 <code>componentDidMount</code> 生命周期方法中启动定时器，开始滚动：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">componentDidMount</span> () &#123;</span><br><span class="line">    <span class="comment">// 开始滚动</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">startMarquee</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>startMarquee</code> 方法中，我们使用 <code>setInterval</code> 定时调用 <code>rollAnimation</code> 方法，实现滚动动画：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rollAnimation = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ... 动画逻辑</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">startMarquee = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; interval = <span class="number">1000</span> &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">marqueeInterval</span> = <span class="variable language_">window</span>.<span class="built_in">setInterval</span>(<span class="variable language_">this</span>.<span class="property">rollAnimation</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>), interval);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>rollAnimation</code> 方法中，我们首先复制第一条文案到最后一条，然后计算下一个文案索引和滚动距离，最后更新组件的 State，触发重新渲染：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rollAnimation = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ... 复制文案、计算索引和滚动距离</span></span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">        <span class="attr">translateY</span>: nextTranslateY,</span><br><span class="line">        <span class="attr">currentTextIndex</span>: nextTextIndex,</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后，在 <code>render</code> 方法中，我们使用 <code>ul</code> 元素来包裹文案列表，并通过 <code>transform: translateY</code> 来实现滚动效果：</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul</span><br><span class="line">    className=<span class="string">&quot;marquee-content&quot;</span></span><br><span class="line">    style=&#123;&#123;</span><br><span class="line">        <span class="attr">transform</span>: <span class="string">`translateY(<span class="subst">$&#123;translateY&#125;</span>px)`</span></span><br><span class="line">    &#125;&#125;</span><br><span class="line">&gt;</span><br><span class="line">    &#123;textsWithFirst.<span class="title function_">map</span>(<span class="function">(<span class="params">text, index</span>) =&gt;</span> (</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;index&#125;</span> <span class="attr">className</span>=<span class="string">&quot;marquee-item&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            &#123;text&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line">    ))&#125;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+<p>为了让滚动效果更加自然，我们还添加了一个渐变遮罩，遮挡住文案列表的上下边缘：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.marquee-mask &#123;</span><br><span class="line">    background-image: linear-gradient(to bottom, #fff 0%, transparent 50%, transparent 50%, #fff 100%);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="组件使用"><a href="#组件使用" class="headerlink" title="组件使用"></a>组件使用</h3><p>使用起来非常简单，只需要传入文案数组即可：</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="title class_">SeamlessMarquee</span> texts=&#123;warningArr&#125; interval=&#123;<span class="number">3000</span>&#125; /&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="源码全览"><a href="#源码全览" class="headerlink" title="源码全览"></a>源码全览</h3><p><strong>SeamlessMarquee.tsx:</strong></p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./index.scss&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">SeamlessMarqueeProps</span> &#123;</span><br><span class="line">    <span class="attr">texts</span>: <span class="built_in">string</span>[]; <span class="comment">// 轮播文案</span></span><br><span class="line">    interval?: <span class="built_in">number</span>; <span class="comment">// 轮播间隔，单位毫秒，默认1000毫秒（每秒滚动一组文案）</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">SeamlessMarqueeState</span> &#123;</span><br><span class="line">    <span class="attr">translateY</span>: <span class="built_in">number</span>; <span class="comment">// 滚动距离</span></span><br><span class="line">    <span class="attr">currentTextIndex</span>: <span class="built_in">number</span>; <span class="comment">// 当前显示的文案索引</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SeamlessMarquee</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span>&lt;</span><br><span class="line">    <span class="title class_">SeamlessMarqueeProps</span>,</span><br><span class="line">    <span class="title class_">SeamlessMarqueeState</span></span><br><span class="line">&gt; &#123;</span><br><span class="line">    <span class="comment">// 滚动容器</span></span><br><span class="line">    <span class="keyword">private</span> <span class="attr">setMarqueeContentRef</span>: <span class="built_in">any</span> = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">marqueeInterval</span>: <span class="built_in">any</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">constructor</span> (<span class="params"><span class="attr">props</span>: <span class="title class_">SeamlessMarqueeProps</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">super</span>(props);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">            <span class="attr">translateY</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="attr">currentTextIndex</span>: <span class="number">0</span>,</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">componentDidMount</span> () &#123;</span><br><span class="line">        <span class="comment">// 开始滚动</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">startMarquee</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">componentWillUnmount</span> () &#123;</span><br><span class="line">        <span class="comment">// 停止滚动</span></span><br><span class="line">        <span class="variable language_">window</span>.<span class="built_in">clearInterval</span>(<span class="variable language_">this</span>.<span class="property">marqueeInterval</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * desc 动画逻辑抽离</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@author</span> <span class="variable">Lang</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@date</span> 2024-06-04 16:24:17</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    rollAnimation = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; texts &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 复制第一个文案到最后一个，实现无缝衔接</span></span><br><span class="line">        <span class="keyword">const</span> textsWithFirst = [...texts, texts[<span class="number">0</span>]];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">const</span> &#123; currentTextIndex &#125; = <span class="variable language_">this</span>.<span class="property">state</span>;</span><br><span class="line">        <span class="comment">// 计算下一个文案索引</span></span><br><span class="line">        <span class="keyword">const</span> nextTextIndex = (currentTextIndex + <span class="number">1</span>) % textsWithFirst.<span class="property">length</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 计算滚动距离</span></span><br><span class="line">        <span class="keyword">const</span> nextTranslateY = nextTextIndex * -<span class="number">36</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果滚动到最后一个文案，需要瞬间回到第一个文案</span></span><br><span class="line">        <span class="keyword">if</span> (currentTextIndex === textsWithFirst.<span class="property">length</span> - <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 瞬间回到第一个文案 - 关闭过渡动画</span></span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">setMarqueeContentRef</span>.<span class="property">style</span>.<span class="property">transition</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">setMarqueeContentRef</span>.<span class="property">style</span>.<span class="property">transform</span> = <span class="string">&#x27;translateY(0)&#x27;</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 等待回到第一个文案后，再开启过渡动画</span></span><br><span class="line">            <span class="comment">// window.setTimeout 的作用是确保在 translateY 设置为 0 之后，再开启过渡动画，避免视觉上“回拉”的感觉</span></span><br><span class="line">            <span class="variable language_">window</span>.<span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">                <span class="comment">// 第一个文案在最后一个文案的后面，所以在视觉上已经是第二个文案了</span></span><br><span class="line">                <span class="comment">// 设置第二个文案为当前文案，用于过渡动画</span></span><br><span class="line">                <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">                    <span class="attr">translateY</span>: -<span class="number">36</span>,</span><br><span class="line">                    <span class="attr">currentTextIndex</span>: <span class="number">1</span>,</span><br><span class="line">                &#125;, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">                    <span class="variable language_">this</span>.<span class="property">setMarqueeContentRef</span>.<span class="property">style</span>.<span class="property">transition</span> = <span class="string">&#x27;transform 0.5s&#x27;</span>;</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;, <span class="number">0</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">            <span class="attr">translateY</span>: nextTranslateY,</span><br><span class="line">            <span class="attr">currentTextIndex</span>: nextTextIndex,</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 开始滚动</span></span><br><span class="line">    startMarquee = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; interval = <span class="number">1000</span> &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">marqueeInterval</span> = <span class="variable language_">window</span>.<span class="built_in">setInterval</span>(<span class="variable language_">this</span>.<span class="property">rollAnimation</span>.<span class="title function_">bind</span>(<span class="variable language_">this</span>), interval);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">render</span> () &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; texts &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line">        <span class="keyword">const</span> &#123; translateY &#125; = <span class="variable language_">this</span>.<span class="property">state</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 复制第一个文案到最后一个，实现无缝衔接</span></span><br><span class="line">        <span class="keyword">const</span> textsWithFirst = [...texts, texts[<span class="number">0</span>]];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;seamless-marquee&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&quot;marquee-mask&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">ul</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">className</span>=<span class="string">&quot;marquee-content&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">ref</span>=<span class="string">&#123;ref</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">                        this.setMarqueeContentRef = ref;</span></span><br><span class="line"><span class="language-xml">                    &#125;&#125;</span></span><br><span class="line"><span class="language-xml">                    style=&#123;&#123;</span></span><br><span class="line"><span class="language-xml">                        transform: `translateY($&#123;translateY&#125;px)`</span></span><br><span class="line"><span class="language-xml">                    &#125;&#125;</span></span><br><span class="line"><span class="language-xml">                &gt;</span></span><br><span class="line"><span class="language-xml">                    &#123;textsWithFirst.map((text, index) =&gt; (</span></span><br><span class="line"><span class="language-xml">                        <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;index&#125;</span> <span class="attr">className</span>=<span class="string">&quot;marquee-item&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                            &#123;text&#125;</span></span><br><span class="line"><span class="language-xml">                        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    ))&#125;</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">SeamlessMarquee</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>SeamlessMarquee.scss:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">.seamless-marquee &#123;</span><br><span class="line">    width: 380px;</span><br><span class="line">    height: 36px;</span><br><span class="line">    overflow: hidden;</span><br><span class="line">    position: relative;</span><br><span class="line">    font-size: 12px;</span><br><span class="line"></span><br><span class="line">    .marquee-mask &#123;</span><br><span class="line">        position: absolute;</span><br><span class="line">        left: 0;</span><br><span class="line">        top: 0;</span><br><span class="line">        content: &#x27;&#x27;;</span><br><span class="line">        display: block;</span><br><span class="line">        background-image: linear-gradient(to bottom, #fff 0%, transparent 50%, transparent 50%, #fff 100%);</span><br><span class="line">        width: 100%;</span><br><span class="line">        height: 100%;</span><br><span class="line">        z-index: 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .marquee-content &#123;</span><br><span class="line">        display: flex;</span><br><span class="line">        flex-direction: column;</span><br><span class="line">        position: absolute;</span><br><span class="line">        top: 0;</span><br><span class="line">        left: 0;</span><br><span class="line">        width: 100%;</span><br><span class="line">        height: auto;</span><br><span class="line">        transition: transform .5s;</span><br><span class="line"></span><br><span class="line">        .marquee-item &#123;</span><br><span class="line">            display: flex;</span><br><span class="line">            align-items: center;</span><br><span class="line">            height: 36px;</span><br><span class="line">            line-height: 36px;</span><br><span class="line">            color: #FF4D4A;</span><br><span class="line">            font-size: 12px;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过以上步骤，我们成功开发了一个 React 无缝滚动跑马灯组件，满足了项目的需求，并且代码简洁易懂，方便维护。在实际项目中，我们可以根据具体需求，对组件进行进一步的扩展和优化，比如添加自定义样式、暂停/继续滚动等功能。</p>
+
+    </div>
+
+    
+    
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>再接再厉-------------</div>
+    
+</div>
+
+
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/xiaolangwiki/tags/React/" rel="tag"><i class="fa fa-tag"></i> React</a>
+              <a href="/xiaolangwiki/tags/%E8%B7%91%E9%A9%AC%E7%81%AF/" rel="tag"><i class="fa fa-tag"></i> 跑马灯</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/xiaolangwiki/2022/01/12/14/" rel="prev" title="一个基本的拦截器实现示例：Axios 拦截器">
+      <i class="fa fa-chevron-left"></i> 一个基本的拦截器实现示例：Axios 拦截器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/xiaolangwiki/2022/02/18/11/" rel="next" title="程序员效率大挑战：别让"偶然复杂度"坑了你！">
+      程序员效率大挑战：别让"偶然复杂度"坑了你！ <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#React-%E6%97%A0%E7%BC%9D%E6%BB%9A%E5%8A%A8%E8%B7%91%E9%A9%AC%E7%81%AF%E7%BB%84%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">React 无缝滚动跑马灯组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="nav-number">1.1.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.</span> <span class="nav-text">组件设计与实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF"><span class="nav-number">1.2.1.</span> <span class="nav-text">核心思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">代码实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">组件使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E5%85%A8%E8%A7%88"><span class="nav-number">1.4.</span> <span class="nav-text">源码全览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="小浪wiki"
+      src="/xiaolangwiki/images/avatar.png">
+  <p class="site-author-name" itemprop="name">小浪wiki</p>
+  <div class="site-description" itemprop="description">一个关于编程、计算机、软件工程、互联网的知识库。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/xiaolangwiki/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/xiaolangwiki/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/xiaolangwiki/tags/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LianTianNo1" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;LianTianNo1" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小浪wiki</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div><div>
+<!--添加网站运行时间-->
+<span>小破站已经在风雨中度过了</span>
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    function createtime() {
+        const startTime = '09/27/2018 00:12:55',
+            start = new Date(startTime)
+        let mill = new Date() - start,
+            seconds = Math.floor(mill / 1000),
+            mins = Math.floor(seconds / 60),
+            hours = Math.floor(mins / 60),
+            days = Math.floor(hours / 24)
+        const time = {
+            seconds: seconds - mins * 60,
+            mins: mins - hours * 60,
+            hours: hours - days * 24,
+        }
+        for (const k in time) {
+            time[k] = `${time[k]}`.padStart(2, '0')
+        }
+        document.getElementById("timeDate").innerHTML = ` ${days} 天`
+        document.getElementById("times").innerHTML = ` ${time.hours} 小时 ${time.mins} 分 ${time.seconds} 秒`
+    }
+    setInterval(createtime, 500)
+</script>
+</div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/xiaolangwiki/lib/anime.min.js"></script>
+  <script src="/xiaolangwiki/lib/pjax/pjax.min.js"></script>
+  <script src="/xiaolangwiki/lib/velocity/velocity.min.js"></script>
+  <script src="/xiaolangwiki/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/xiaolangwiki/js/utils.js"></script>
+
+<script src="/xiaolangwiki/js/motion.js"></script>
+
+
+<script src="/xiaolangwiki/js/schemes/muse.js"></script>
+
+
+<script src="/xiaolangwiki/js/next-boot.js"></script>
+
+<script src="/xiaolangwiki/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/xiaolangwiki/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'Ov23li7GiIl6VGhHOLU4',
+      clientSecret: '0a694770a2c52ecc5d07b4982fd9e46c78009ed3',
+      repo        : 'https://github.com/LianTianNo1/xiaolangwiki',
+      owner       : 'LianTianNo1',
+      admin       : ['LianTianNo1'],
+      id          : 'bfd6549871778160a7b0655ca6f57f34',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+    </div>
+</body>
+</html>
