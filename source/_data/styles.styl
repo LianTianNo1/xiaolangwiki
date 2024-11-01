@@ -1,0 +1,96 @@
+// // 主页文章添加阴影效果
+// .post-block {
+//     padding: 25px;
+//     -webkit-box-shadow: 0 0 5px rgba(202, 203, 203, 0.5);
+//     -moz-box-shadow: 0 0 5px rgba(202, 203, 204, 0.5);
+// }
+
+// 避免链接和代码过长，而导致样式问题
+.post-block code {
+    word-break: break-all;
+}
+
+.post-block a {
+    word-break: break-all;
+}
+
+// 图片圆角
+.post-body img {
+    border-radius: 1em;
+}
+
+// 将链接文本设置为蓝色，鼠标划过时文字颜色加深，并显示下划线。
+.post-body p a {
+    color: #0593d3;
+    border-bottom: none;
+
+    &:hover {
+        color: #0477ab;
+        text-decoration: underline;
+    }
+}
+
+// 适配暗黑模式下博客的 tag
+.posts-expand .post-tags a {
+    border-bottom: none;
+    padding: 1px 5px;
+    background: var(--content-bg-color);
+}
+
+.my_post_copyright {
+    max-width: 45em;
+    margin: 2.8em auto 0;
+    padding: 0.5em 1em;
+    border: 1px solid #d3d3d3;
+    font-size: 0.93rem;
+    line-height: 1.6em;
+    word-break: break-all;
+}
+
+.my_post_copyright p {
+    margin: 0;
+}
+
+.my_post_copyright span {
+    display: inline-block;
+    width: 5.2em;
+    color: #b5b5b5;
+    font-weight: bold;
+}
+
+.my_post_copyright .raw {
+    margin-left: 1em;
+    width: 5em;
+}
+
+.my_post_copyright a {
+    color: #808080;
+    border-bottom: 0;
+}
+
+.my_post_copyright a:hover {
+    color: #a3d2a3;
+    text-decoration: underline;
+}
+
+.my_post_copyright:hover .fa-clipboard {
+    color: #000;
+}
+
+.my_post_copyright .post-url:hover {
+    font-weight: normal;
+}
+
+.my_post_copyright .copy-path {
+    margin-left: 1em;
+    width: 1em;
+
+    +mobile() {
+        display: none;
+    }
+}
+
+.my_post_copyright .copy-path:hover {
+    color: #808080;
+    cursor: pointer;
+}

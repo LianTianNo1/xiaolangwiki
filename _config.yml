@@ -4,19 +4,25 @@
 
 # Site
 title: 小浪wiki
-subtitle: ''
-description: ''
-keywords:
+subtitle: 一个关于编程、计算机、软件工程、互联网
+description: 一个关于编程、计算机、软件工程、互联网的知识库。
+keywords: 小浪wiki, 编程, 计算机, 软件工程, 互联网
 author: 小浪wiki
 language: zh-CN
-timezone: ''
+timezone: 'Asia/Shanghai'
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 # url: http://example.com
 url: https://liantianno1.github.io/xiaolangwiki
 root: /xiaolangwiki/
-permalink: :year/:month/:day/:title/
+# permalink: :year/:month/:day/:title/
+permalink: :year/:month/:day/:second/
+# permalink: posts/:abbrlink/
+# abbrlink:
+# 	alg: crc32   #算法： crc16(default) and crc32
+# 	rep: hex     #进制： dec(default) and hex
+
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -98,7 +104,9 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+# theme: landscape
+theme: next
+scheme: Muse
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
@@ -106,3 +114,31 @@ deploy:
   type: git
   repo: git@github.com:LianTianNo1/xiaolangwiki.git
   branch: master
+
+
+pangu: true
+
+search:
+  path: search.xml
+  field: post
+  content: true
+  format: html
+  limit: 10000
+
+live2d:
+  enable: true
+  scriptFrom: local
+  pluginRootPath: live2dw/
+  pluginJsPath: lib/
+  pluginModelPath: assets/
+  tagMode: false
+  log: false
+  model:
+    use: live2d-widget-model-hijiki
+  display:
+    position: left
+    width: 150
+    height: 300
+    left: 10
+  mobile:
+    show: true
