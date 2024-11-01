@@ -1,3 +1,39 @@
+p {
+  line-height: 1.6;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  text-indent: 4ex;
+}
+@media (min-width: 1200px) {
+  .post-body {
+    font-size: 1em;
+  }
+}
+.site-title {
+  text-indent: 0;
+}
+.site-author-name {
+  text-indent: 0;
+}
+.post-button {
+  margin-top: 10px;
+}
+.posts-expand .post-header {
+  margin-bottom: 10px;
+}
+:root {
+  --btn-default-border-color: #87cefa;
+  --btn-default-color: #87cefa;
+  --btn-default-hover-bg: #87cefa;
+  --btn-default-hover-border-color: #87cefa;
+  --theme-color: #6495ed;
+}
+blockquote > p {
+  text-indent: 0;
+}
+ol > li > p {
+  text-indent: 0;
+}
 :root {
   --body-bg-color: #fff;
   --content-bg-color: #fff;
@@ -461,7 +497,7 @@ pre {
 }
 pre,
 code {
-  font-family: consolas, Menlo, monospace, "PingFang SC", "Microsoft YaHei";
+  font-family: 'Console', consolas, Menlo, monospace, "PingFang SC", "Microsoft YaHei";
 }
 code {
   background: #eee;
@@ -1337,7 +1373,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #dbff4d;
+  background: #e2339e;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -1565,7 +1601,7 @@ pre .javascript .function {
 }
 .languages {
   display: inline-block;
-  font-size: 1.125em;
+  font-size: 1em;
   position: relative;
 }
 .languages .lang-select-label span {
@@ -1691,13 +1727,13 @@ pre .javascript .function {
   top: 0;
 }
 .post-body {
-  font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: 'Noto Serif SC', 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
 @media (min-width: 1200px) {
   .post-body {
-    font-size: 1.125em;
+    font-size: 1em;
   }
 }
 .post-body .exturl .fa {
@@ -1746,7 +1782,7 @@ pre .javascript .function {
   }
 }
 .posts-collapse .collection-title {
-  font-size: 1.125em;
+  font-size: 1em;
   position: relative;
 }
 .posts-collapse .collection-title::before {
@@ -1948,7 +1984,7 @@ pre .javascript .function {
   margin: 0;
 }
 .posts-expand .post-header {
-  font-size: 1.125em;
+  font-size: 1em;
 }
 .posts-expand .post-title {
   font-size: 1.5em;
@@ -1989,7 +2025,7 @@ pre .javascript .function {
 }
 .posts-expand .post-meta {
   color: #999;
-  font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: 'Noto Serif SC', 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 0.75em;
   margin: 3px 0 60px 0;
   text-align: center;
