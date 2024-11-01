@@ -76,13 +76,19 @@ blockquote:after {
 ol > li > p {
   text-indent: 0;
 }
-.post {
+article.post,
+article.post-block {
   background: var(--post-bg-color);
   border-radius: 4px 4px 0 0;
   margin-bottom: 60px;
   margin-top: 60px;
   padding-left: 2.67rem;
   padding-right: 2.67rem;
+  padding-top: 2.67rem;
+}
+article.post p,
+article.post-block p {
+  line-height: 2 !important;
 }
 .post table {
   border-collapse: collapse;
@@ -100,6 +106,7 @@ ol > li > p {
 }
 .content-wrap .content {
   padding-bottom: 2.67rem;
+  padding-top: 40px;
 }
 .post-body h1,
 .post-body h2,
@@ -1534,7 +1541,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ff78ff;
+  background: #407895;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
