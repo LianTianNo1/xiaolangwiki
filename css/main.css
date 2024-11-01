@@ -164,10 +164,10 @@ ol > li > p {
   color: var(--my-font-brand1-normal) !important;
 }
 .sidebar-nav li {
-  color: var(--theme-color) !important;
+  color: var(--text-color-dark) !important;
 }
 .sidebar-nav li:hover {
-  color: var(--title-color) !important;
+  color: var(--my-font-brand1-normal) !important;
 }
 .post-toc .nav .active-current > a {
   color: var(--my-font-brand1-normal) !important;
@@ -182,6 +182,18 @@ ol > li > p {
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 90%;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.4);
+  border-radius: 3px;
+}
+body::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 3px;
+}
+body::-webkit-scrollbar {
+  height: 6px;
+  width: 3px;
 }
 :root {
   --body-bg-color: #fff;
@@ -1522,7 +1534,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #1f458c;
+  background: #ff78ff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
