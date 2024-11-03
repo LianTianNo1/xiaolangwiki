@@ -133,8 +133,65 @@
         }
     }
 
+    class Fish {
+        constructor(x, y, size, color) {
+            this.x = x;
+            this.y = y;
+            this.size = size;
+            this.color = color;
+            this.jumpHeight = Math.random() * 300 + 50;
+            this.jumpDuration = 160;
+            this.currentJumpTime = 0;
+            this.initialY = y;
+        }
+
+        update() {
+            if (this.currentJumpTime < this.jumpDuration) {
+                const progress = this.currentJumpTime / this.jumpDuration;
+                const jumpCurve = Math.sin(progress * Math.PI);
+                this.y = this.initialY - jumpCurve * this.jumpHeight;
+                this.x += 2; // 横向移动速度
+                this.currentJumpTime++;
+            }
+        }
+
+        render() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+
+            // 绘制鱼身
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.quadraticCurveTo(this.size / 2, -this.size / 4, this.size, 0);
+            ctx.quadraticCurveTo(this.size / 2, this.size / 4, 0, 0);
+            ctx.fill();
+
+            // 绘制鱼尾
+            ctx.beginPath();
+            ctx.moveTo(-this.size / 4, 0);
+            ctx.lineTo(-this.size / 2, -this.size / 4);
+            ctx.lineTo(-this.size / 2, this.size / 4);
+            ctx.closePath();
+            ctx.fill();
+
+            // 绘制鱼眼
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(this.size * 0.75, -this.size / 8, this.size / 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(this.size * 0.75, -this.size / 8, this.size / 20, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+    }
+
     const energyBlades = [];
     const oceanWaves = [];
+    const fishes = [];
 
     function initializeOceanWaves() {
         for (let i = 0; i < 5; i++) {
@@ -145,6 +202,16 @@
             const waveColor = `rgba(0, ${100 + i * 30}, ${200 + i * 10}, ${0.5 - i * 0.1})`;
             const waveDirection = Math.random() < 0.5 ? -1 : 1;
             oceanWaves.push(new OceanWave(baseY, waveHeight, waveFreq, waveSpeed, waveColor, waveDirection));
+        }
+    }
+
+    function generateFish() {
+        if (Math.random() < 0.02 && fishes.length < 10) { // 控制鱼的生成频率和最大数量
+            const x = -50; // 从屏幕左侧开始
+            const y = canvas.height - Math.random() * 100;
+            const size = Math.random() * 20 + 10;
+            const color = `hsl(${Math.random() * 60 + 180}, 100%, 50%)`;
+            fishes.push(new Fish(x, y, size, color));
         }
     }
 
@@ -168,6 +235,16 @@
         oceanWaves.forEach(wave => {
             wave.progress();
             wave.visualize();
+        });
+
+        generateFish();
+
+        fishes.forEach((fish, index) => {
+            fish.update();
+            fish.render();
+            if (fish.x > canvas.width + 50 || fish.currentJumpTime >= fish.jumpDuration) {
+                fishes.splice(index, 1);
+            }
         });
 
         requestAnimationFrame(animationLoop);
