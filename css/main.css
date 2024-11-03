@@ -136,14 +136,33 @@ article.post-block p {
   right: 0;
   width: 400px;
 }
+.sidebar {
+  background: url("https://website-1316858268.cos.ap-shanghai.myqcloud.com/files/2024-11-03/2ba676f5-68da-4597-9788-96e61277d792.png") !important;
+  background-size: cover !important;
+  padding-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+.sidebar::before {
+  backdrop-filter: blur(8px) saturate(1.5);
+  background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.61) 100%);
+  content: '';
+  display: block;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
 .header {
-  background: url("https://website-1316858268.cos.ap-shanghai.myqcloud.com/files/2024-11-01/3e3b06c8-e8e5-4f91-8fdf-22d51071481a.jpeg") !important;
+  background: url("https://website-1316858268.cos.ap-shanghai.myqcloud.com/files/2024-11-03/585555d2-00d9-4c17-bad7-a635067228ac.png") !important;
   background-size: cover !important;
   padding-bottom: 12px;
   position: relative;
   z-index: 1;
 }
 .header::before {
+  backdrop-filter: blur(8px) saturate(1.5);
   background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.61) 100%);
   content: '';
   display: block;
@@ -163,7 +182,6 @@ article.post-block p {
   filter: brightness(0) invert(1);
 }
 .sidebar {
-  background: #fff !important;
   box-shadow: none !important;
 }
 .sidebar-nav .sidebar-nav-active {
@@ -201,6 +219,14 @@ body::-webkit-scrollbar-track {
 body::-webkit-scrollbar {
   height: 6px;
   width: 3px;
+}
+#bg-canvas {
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: -1;
 }
 :root {
   --body-bg-color: #fff;
@@ -1541,7 +1567,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #fff0a2;
+  background: #90be62;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
