@@ -20,7 +20,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"liantianno1.github.io","root":"/xiaolangwiki/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","enable":true,"active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"liantianno1.github.io","root":"/xiaolangwiki/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","enable":false,"active":"gitalk","storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="GitHub搜索技巧🚀：快速找到你想要的代码原文：https:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;7386299931399110706 嘿，开发者朋友们！ 👋 你是否曾迷失在GitHub的浩瀚代码海洋中，苦苦寻找那份珍贵的代码片段或项目？ 😩 别担心，今天我将传授你GitHub搜索的Jedi秘诀，让你像一位搜索大师一样，轻松找到你想要的任何东西！ ✨ 基础功：关键词和过滤器 首先，掌握基础语">
@@ -355,7 +355,6 @@
 
           </div>
           
-    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -418,7 +417,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/xiaolangwiki/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -431,7 +430,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/xiaolangwiki/tags/">
           
-        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-count">43</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -619,26 +618,6 @@ window.addEventListener('pjax:success', () => {
   
 
   
-
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
-
-<script>
-NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
-    var gitalk = new Gitalk({
-      clientID    : 'Ov23li7GiIl6VGhHOLU4',
-      clientSecret: '0a694770a2c52ecc5d07b4982fd9e46c78009ed3',
-      repo        : 'https://github.com/LianTianNo1/xiaolangwiki',
-      owner       : 'LianTianNo1',
-      admin       : ['LianTianNo1'],
-      id          : '256ba28eea0af90ec9cfbde58d12a193',
-        language: 'zh-CN',
-      distractionFreeMode: true
-    });
-    gitalk.render('gitalk-container');
-  }, window.Gitalk);
-});
-</script>
 
     </div>
 <script src="/xiaolangwiki/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/xiaolangwiki/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300,"left":10},"mobile":{"show":true}});</script></body>
